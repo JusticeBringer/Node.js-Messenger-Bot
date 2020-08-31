@@ -177,7 +177,7 @@ function handleMessage(sender_psid, message) {
 
     if(entityChosen === ""){
         //default
-        callSendAPI(sender_psid,`The bot needs more training. Try to say "thanks a lot" or "hi" to the bot` );
+        callSendAPI(sender_psid,`The bot needs more training. You said "${message}".`);
     }else{
        if(entityChosen === "greetings"){
            //send greetings message
