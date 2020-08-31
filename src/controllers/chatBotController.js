@@ -65,50 +65,50 @@ let getWebhook = (req, res) => {
     }
 };
 
-// Handles messages events
-function handleMessage(sender_psid, received_message) {
-    let response;
+// // Handles messages events
+// function handleMessage(sender_psid, received_message) {
+//     let response;
 
-    // Check if the message contains text
-    if (received_message.text) {
+//     // Check if the message contains text
+//     if (received_message.text) {
 
-        // Create the payload for a basic text message
-        response = {
-            "text": `You sent the message: "${received_message.text}".`
-        }
-    } else if (received_message.attachments) {
+//         // Create the payload for a basic text message
+//         response = {
+//             "text": `You sent the message: "${received_message.text}".`
+//         }
+//     } else if (received_message.attachments) {
 
-    // Gets the URL of the message attachment
-    let attachment_url = received_message.attachments[0].payload.url;
-        response = {
-            "attachment": {
-                "type": "template",
-                "payload": {
-                    "template_type": "generic",
-                    "elements": [{
-                        "title": "Is this the right picture?",
-                        "subtitle": "Tap a button to answer.",
-                        "image_url": attachment_url,
-                        "buttons": [
-                            {
-                                "type": "postback",
-                                "title": "Yes!",
-                                "payload": "yes",
-                            },
-                            {
-                                "type": "postback",
-                                "title": "No!",
-                                "payload": "no",
-                            }
-                        ],
-                    }]
-                }
-            }
-        }
-    }
-    // Sends the response message
-    callSendAPI(sender_psid, response);
-}
+//     // Gets the URL of the message attachment
+//     let attachment_url = received_message.attachments[0].payload.url;
+//         response = {
+//             "attachment": {
+//                 "type": "template",
+//                 "payload": {
+//                     "template_type": "generic",
+//                     "elements": [{
+//                         "title": "Is this the right picture?",
+//                         "subtitle": "Tap a button to answer.",
+//                         "image_url": attachment_url,
+//                         "buttons": [
+//                             {
+//                                 "type": "postback",
+//                                 "title": "Yes!",
+//                                 "payload": "yes",
+//                             },
+//                             {
+//                                 "type": "postback",
+//                                 "title": "No!",
+//                                 "payload": "no",
+//                             }
+//                         ],
+//                     }]
+//                 }
+//             }
+//         }
+//     }
+//     // Sends the response message
+//     callSendAPI(sender_psid, response);
+// }
 
 // Handles messaging_postbacks events
 function handlePostback(sender_psid, received_postback) {
@@ -157,7 +157,7 @@ function firstEntity(nlp, name) {
 }
 
 function handleMessage(sender_psid, message) {
-    //handle message for react, like press like button
+    // handle message for react, like press like button
     // id like button: sticker_id 369239263222822
 
     if( message && message.attachments && message.attachments[0].payload){
@@ -170,26 +170,26 @@ function handleMessage(sender_psid, message) {
     let entityChosen = "";
     entitiesArr.forEach((name) => {
         let entity = firstEntity(message.nlp, name);
-        if (entity && entity.confidence > 0.8) {
+        if (entity && entity.confidence > 0.6) {
             entityChosen = name;
         }
     });
 
     if(entityChosen === ""){
         //default
-        callSendAPI(sender_psid,`The bot is needed more training, try to say "thanks a lot" or "hi" to the bot` );
+        callSendAPI(sender_psid,`The bot needs more training. Try to say "thanks a lot" or "hi" to the bot` );
     }else{
        if(entityChosen === "greetings"){
            //send greetings message
-           callSendAPI(sender_psid,'Hi there! This bot is created by Hary Pham. Watch more videos on HaryPhamDev Channel!');
+           callSendAPI(sender_psid,'Hello!');
        }
        if(entityChosen === "thanks"){
            //send thanks message
-           callSendAPI(sender_psid,`You 're welcome!`);
+           callSendAPI(sender_psid,`You're welcome!`);
        }
         if(entityChosen === "bye"){
             //send bye message
-            callSendAPI(sender_psid,'bye-bye!');
+            callSendAPI(sender_psid,'Bye!');
         }
     }
 }
