@@ -1,0 +1,28 @@
+{
+  "name": "botmessenger",
+  "version": "1.0.0",
+  "description": "Node.js Messenger Bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JusticeBringer/Node.js-Messenger-Bot.git"
+  },
+  "keywords": [
+    "Node.js",
+    "messenger",
+    "bot"
+  ],
+  "author": "Gabriel Arghire",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JusticeBringer/Node.js-Messenger-Bot/issues"
+  },
+  "homepage": "https://github.com/JusticeBringer/Node.js-Messenger-Bot#readme",
+  "dependencies": {
+    "ejs": "^3.1.5",
+    "express": "^4.17.1"
+  }
+}
