@@ -287,7 +287,7 @@ function handleQuickReply(sender_psid, message){
         }
         else{
             const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
-            let days_left = Math.round(Math.abs((today - new Date(user_year, user_day, user_month)) / oneDay));
+            let days_left = Math.round(Math.abs( ( (today - new Date(user_year, user_day, user_month)) / oneDay) / (yyyy - user_year)) );
 
             callSendAPI(sender_psid,`There are ${days_left} days until your next birthday. Would you like a present?`);
         }
