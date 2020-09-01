@@ -144,7 +144,7 @@ function handleTextMessage(sender_psid, message){
         user_birth_date = "";
     }
 
-    if(greeting.includes(mess)){
+    if(greeting.includes(mess) || mess === "#start_over"){
         if(!user_first_name){
             resp = {
                 "text": "Hello! Would you like to answer few questions?",
