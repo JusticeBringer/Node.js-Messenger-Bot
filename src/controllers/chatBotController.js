@@ -231,10 +231,8 @@ function handleQuickReply(sender_psid, message){
     }
     // user agreed on his first name
     else if (mess === "yes") {
+        latest_message[3] = latest_message[3].toUpperCase();
         for(let i = 3; i < latest_message.length; i++){
-            if(i === 3){
-                latest_message[i] = latest_message[i].toUpperCase();
-            }
             user_first_name += latest_message[i];
 
             if(latest_message[i] === " ") break;
@@ -246,11 +244,8 @@ function handleQuickReply(sender_psid, message){
     }
     // user agreed on his birth date
     else if (mess === "yep"){
+        latest_message[3] = latest_message[3].toUpperCase();
         for(let i = 3; i < latest_message.length; i++){
-            if(i === 3){
-                latest_message[i] = latest_message[i].toUpperCase();
-            }
-            
             user_birth_date += latest_message[i];
 
             if(latest_message[i] === " ") break;
