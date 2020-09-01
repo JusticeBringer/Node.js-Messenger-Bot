@@ -82,14 +82,41 @@ function handlePostback(sender_psid, received_postback) {
 }
 
 // Sends response messages via the Send API
-function callSendAPI(sender_psid, response) {
+function callSendAPI(sender_psid, response, quick_reply="no") {
     // Construct the message body
-    let request_body = {
-        "recipient": {
-            "id": sender_psid
-        },
-        "message": { "text": response }
-    };
+    let request_body;
+
+    if(quick_reply === "no"){
+        request_body = {
+            "recipient": {
+                "id": sender_psid
+            },
+            "message": { "text": response }
+        };
+    }
+    else{
+        request_body = {
+            "recipient": {
+                "id": sender_psid
+            },
+            "messaging_type": "RESPONSE",
+            "message":{
+              "text": "Pick an answer:",
+              "quick_replies":[
+                {
+                  "content_type":"text",
+                  "title":"Yes",
+                  "payload": "yes"
+                },{
+                  "content_type":"text",
+                  "title":"No",
+                  "payload": "no"
+                }
+              ]
+            }
+        };
+    }
+    
 
     // Send the HTTP request to the Messenger Platform
     request({
@@ -110,19 +137,37 @@ function firstTrait(nlp, name) {
     return nlp && nlp.entities && nlp.traits[name] && nlp.traits[name][0];
 }
 
+let user_first_name = "";
+let user_birth_date = "";
+
 function handleMessage(sender_psid, message) {
     // check greeting is here and is confident
-    const greeting = firstTrait(message.nlp, 'greetings');
-    console.log(greeting);
     
-    // let tx = "Hmm " + greeting + " " + greeting.confidence + " .";
-    // console.log(greeting + " " + greeting.confidence + " " + message);
-    if (greeting && greeting.confidence > 0.8) {
-        callSendAPI(sender_psid,`Hello there!`);
-    } else { 
-        // callSendAPI(sender_psid,`The bot needs more training. You said "${message.text}". + ${tx}`);
-        callSendAPI(sender_psid,`The bot needs more training. You said "${message.text}".`);
+    let mess = message.text;
+    mess = mess.toLowerCase();
+
+    // message.nlp did not work
+    let greeting = ["hi", "hello"];
+    let accept_conv = ["yup", "yes", "yeah"];
+    let deny_conv = ["no", "nah"];
+
+    if(mess in greeting){
+        callSendAPI(sender_psid,`Hello! Would you like to answer few questions?`, "yes");
     }
+    else{
+        callSendAPI(sender_psid,`The bot needs more training. You said "${message.text}". Try to say "Hi".`);
+    }
+
+    if(mess in accept_conv){
+
+    }
+    else if (mess in deny_conv){
+
+    }
+    else {
+        callSendAPI(sender_psid,`The bot needs more training. You said "${message.text}". Try to say "Hi".`);
+    }
+    
 }
 
 module.exports = {
