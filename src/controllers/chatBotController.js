@@ -215,6 +215,9 @@ function handleTextMessage(sender_psid, message){
         }
     }
 }
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
 function handleQuickReply(sender_psid, message){
     let mess = message.text;
@@ -231,26 +234,24 @@ function handleQuickReply(sender_psid, message){
     }
     // user agreed on his first name
     else if (mess === "yes") {
-        latest_message[3] = latest_message[3].toUpperCase();
         for(let i = 3; i < latest_message.length; i++){
             user_first_name += latest_message[i];
 
             if(latest_message[i] === " ") break;
         }
-        user_first_name = user_first_name.toUpperCase();
+        user_first_name = capitalizeFirstLetter(user_first_name);
         console.log(user_first_name);
 
         callSendAPI(sender_psid,`You agreed that your first name is ${user_first_name}. Secondly, we would like to know your birth date. Write it down below in the format YYYY-MM-DD. Example: 1987-03-25`);
     }
     // user agreed on his birth date
     else if (mess === "yep"){
-        latest_message[3] = latest_message[3].toUpperCase();
         for(let i = 3; i < latest_message.length; i++){
             user_birth_date += latest_message[i];
 
             if(latest_message[i] === " ") break;
         }
-        user_birth_date = user_birth_date.toUpperCase();
+        user_birth_date = capitalizeFirstLetter(user_birth_date);
         console.log(user_birth_date);
 
         let resp = {
