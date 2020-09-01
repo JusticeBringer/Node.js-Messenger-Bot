@@ -113,11 +113,13 @@ function firstTrait(nlp, name) {
 function handleMessage(sender_psid, message) {
     // check greeting is here and is confident
     const greeting = firstTrait(message.nlp, 'greetings');
-    let tx = "Hmm " + greeting + " " + greeting.confidence + " .";
+    // let tx = "Hmm " + greeting + " " + greeting.confidence + " .";
+    console.log(greeting + " " + greeting.confidence + " " + message);
     if (greeting && greeting.confidence > 0.8) {
         callSendAPI(sender_psid,`Hello there!`);
     } else { 
-        callSendAPI(sender_psid,`The bot needs more training. You said "${message.text}". + ${tx}`);
+        // callSendAPI(sender_psid,`The bot needs more training. You said "${message.text}". + ${tx}`);
+        callSendAPI(sender_psid,`The bot needs more training. You said "${message.text}".`);
     }
 }
 
