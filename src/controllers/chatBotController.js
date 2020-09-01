@@ -155,11 +155,9 @@ function handleTextMessage(sender_psid, message){
                   }
                 ]
               }
-            callSendAPI(sender_psid,``, res);
-        } else if(user_birth_date){
-            callSendAPI(sender_psid,`Hello! Would you like to answer few questions?`, "yes");
+            callSendAPI(sender_psid,``, resp);
         } else{
-
+            callSendAPI(sender_psid,`The bot needs more training. You said "${message.text}". Try to say "Hi".`);
         }
 
     }
