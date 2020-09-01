@@ -15,7 +15,6 @@ let postWebhook = (req, res) =>{
             let webhook_event = entry.messaging[0];
             console.log(webhook_event);
 
-
             // Get the sender PSID
             let sender_psid = webhook_event.sender.id;
             console.log('Sender PSID: ' + sender_psid);
@@ -166,11 +165,11 @@ function handleMessage(sender_psid, message) {
         return;
     }
 
-    let entitiesArr = [ "greetings", "thanks", "bye" ];
+    let entitiesArr = [ "wit$greetings", "wit$thanks", "wit$bye" ];
     let entityChosen = "";
     entitiesArr.forEach((name) => {
         let entity = firstEntity(message.nlp, name);
-        if (entity && entity.confidence > 0.6) {
+        if (entity && entity.confidence > 0.8) {
             entityChosen = name;
         }
     });
@@ -179,15 +178,15 @@ function handleMessage(sender_psid, message) {
         //default
         callSendAPI(sender_psid,`The bot needs more training. You said "${message.text}".`);
     }else{
-       if(entityChosen === "greetings"){
+       if(entityChosen === "wit$greetings"){
            //send greetings message
            callSendAPI(sender_psid,'Hello!');
        }
-       if(entityChosen === "thanks"){
+       if(entityChosen === "wit$thanks"){
            //send thanks message
            callSendAPI(sender_psid,`You're welcome!`);
        }
-        if(entityChosen === "bye"){
+        if(entityChosen === "wit$bye"){
             //send bye message
             callSendAPI(sender_psid,'Bye!');
         }
