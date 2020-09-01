@@ -151,17 +151,13 @@ function handleMessage(sender_psid, message) {
     let accept_conv = ["yup", "yes", "yeah"];
     let deny_conv = ["no", "nah"];
 
-    if(mess in greeting){
+    if(greeting.includes(mess)){
         callSendAPI(sender_psid,`Hello! Would you like to answer few questions?`, "yes");
     }
-    else{
-        callSendAPI(sender_psid,`The bot needs more training. You said "${message.text}". Try to say "Hi".`);
-    }
-
-    if(mess in accept_conv){
+    else if(accept_conv.includes(mess)){
 
     }
-    else if (mess in deny_conv){
+    else if (deny_conv(mess)){
 
     }
     else {
