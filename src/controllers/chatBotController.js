@@ -133,13 +133,18 @@ function handleTextMessage(sender_psid, message){
     latest_message = mess;
 
     // message.nlp did not work
-    let greeting = ["hi", "hello"];
+    let greeting = ["hi", "hey", "hello"];
     let accept_conv = ["yup", "yes", "yeah"];
     let deny_conv = ["no", "nah", "nope", "not now", "maybe later"];
 
     let resp;
 
-    if(greeting.includes(mess) || mess === "#start_over"){
+    if(mess === "#start_over"){
+        user_first_name = "";
+        user_birth_date = "";
+    }
+
+    if(greeting.includes(mess)){
         if(!user_first_name){
             resp = {
                 "text": "Hello! Would you like to answer few questions?",
@@ -226,14 +231,20 @@ function handleQuickReply(sender_psid, message){
     }
     // user agreed on his first name
     else if (mess === "yes") {
-        user_first_name = latest_message;
+        for(let i = 3; i < latest_message.length; i++){
+            user_first_name += latest_message[i];
+        }
+        user_first_name = user_first_name.toUpperCase();
         console.log(user_first_name);
 
-        callSendAPI(sender_psid,`You agreed that your first name is ${user_first_name}. Secondly, we would like to know your birth date. Write it down below like the example: 1987-03-25`);
+        callSendAPI(sender_psid,`You agreed that your first name is ${user_first_name}. Secondly, we would like to know your birth date. Write it down below in the format YYYY-MM-DD. Example: 1987-03-25`);
     }
     // user agreed on his birth date
     else if (mess === "yep"){
-        user_birth_date = latest_message;
+        for(let i = 3; i < latest_message.length; i++){
+            user_birth_date += latest_message[i];
+        }
+        user_birth_date = user_birth_date.toUpperCase();
         console.log(user_birth_date);
 
         let resp = {
