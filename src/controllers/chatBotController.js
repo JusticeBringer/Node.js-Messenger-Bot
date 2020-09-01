@@ -101,7 +101,7 @@ function callSendAPI(sender_psid, response, quick_reply="no") {
             },
             "messaging_type": "RESPONSE",
             "message":{
-              "text": "Pick an answer:",
+              "text": "Hello! Would you like to answer few questions?",
               "quick_replies":[
                 {
                   "content_type":"text",
@@ -142,7 +142,28 @@ let user_birth_date = "";
 
 function handleMessage(sender_psid, message) {
     // check greeting is here and is confident
-    
+    try {
+        if (message.quick_reply) {
+            handleQuickReply();
+        } else if (message.attachments) {
+                handleAttachmentMessage();
+        } else if (message.text) {
+                handleTextMessage(sender_psid, message);
+        } else if (event.postback) {
+                handlePostback();
+        } else if (event.referral) {
+                handleReferral();
+        } else{
+            callSendAPI(sender_psid,`The bot needs more training. You said "${message.text}". Try to say "Hi".`);
+        }
+    } 
+    catch (error) {
+        console.error(error);
+        callSendAPI(sender_psid,`An error has occured: '${error}'. We have been notified and will fix the issue shortly!`);
+      }
+}
+
+function handleTextMessage(sender_psid, message){
     let mess = message.text;
     mess = mess.toLowerCase();
 
@@ -157,13 +178,12 @@ function handleMessage(sender_psid, message) {
     else if(accept_conv.includes(mess)){
 
     }
-    else if (deny_conv(mess)){
+    else if (deny_conv.includes(mess)){
 
     }
     else {
         callSendAPI(sender_psid,`The bot needs more training. You said "${message.text}". Try to say "Hi".`);
     }
-    
 }
 
 module.exports = {
