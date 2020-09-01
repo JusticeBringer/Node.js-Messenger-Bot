@@ -232,7 +232,12 @@ function handleQuickReply(sender_psid, message){
     // user agreed on his first name
     else if (mess === "yes") {
         for(let i = 3; i < latest_message.length; i++){
+            if(i === 3){
+                latest_message[i] = latest_message[i].toUpperCase();
+            }
             user_first_name += latest_message[i];
+
+            if(latest_message[i] === " ") break;
         }
         user_first_name = user_first_name.toUpperCase();
         console.log(user_first_name);
@@ -242,7 +247,13 @@ function handleQuickReply(sender_psid, message){
     // user agreed on his birth date
     else if (mess === "yep"){
         for(let i = 3; i < latest_message.length; i++){
+            if(i === 3){
+                latest_message[i] = latest_message[i].toUpperCase();
+            }
+            
             user_birth_date += latest_message[i];
+
+            if(latest_message[i] === " ") break;
         }
         user_birth_date = user_birth_date.toUpperCase();
         console.log(user_birth_date);
