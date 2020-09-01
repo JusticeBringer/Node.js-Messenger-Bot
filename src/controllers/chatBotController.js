@@ -176,6 +176,7 @@ function handleTextMessage(sender_psid, message){
         let resp;
 
         if(!user_first_name){
+            latest_message = capitalizeFirstLetter(latest_message);
             resp = {
                 "text": "Is " + latest_message + " your first name?",
                 "quick_replies":[
@@ -272,7 +273,24 @@ function handleQuickReply(sender_psid, message){
         callSendAPI(sender_psid,``, resp);
     }
     else if (mess === "i do"){
-        callSendAPI(sender_psid,`There are n days until your next birthday. Would you like a present?`);
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
+
+        var user_year = user_birth_date.substring(0, 4);
+        var user_month = user_birth_date.substring(5, 7);
+        var user_day = user_birth_date.substring(8, 10);
+
+        if(user_year >= yyyy){
+            callSendAPI(sender_psid,`Birth date introduced is false. If you wish to start this conversation again write "#start_over". Goodbye 🖐`);
+        }
+        else{
+            const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+            let days_left = Math.round(Math.abs((today - new Date(user_year, user_day, user_month)) / oneDay));
+
+            callSendAPI(sender_psid,`There are ${days_left} days until your next birthday. Would you like a present?`);
+        }
     }
     else if (mess === "not now" || mess === "no" || mess === "not at all" || mess === "not interested"){
             callSendAPI(sender_psid,`Thank you for your answer. If you wish to start this conversation again write "#start_over". Goodbye 🖐`);
