@@ -64,29 +64,12 @@ let getWebhook = (req, res) => {
     }
 };
 
-// Handles messaging_postbacks events
-function handlePostback(sender_psid, received_postback) {
-    let response;
-
-    // Get the payload for the postback
-    let payload = received_postback.payload;
-
-    // Set the response based on the postback payload
-    if (payload === 'yes') {
-        response = { "text": "Thanks!" }
-    } else if (payload === 'no') {
-        response = { "text": "Oops, try sending another image." }
-    }
-    // Send the message to acknowledge the postback
-    callSendAPI(sender_psid, response);
-}
-
 // Sends response messages via the Send API
-function callSendAPI(sender_psid, response, quick_reply="no") {
+function callSendAPI(sender_psid, response, quick_reply={"text": ""}) {
     // Construct the message body
     let request_body;
 
-    if(quick_reply === "no"){
+    if(!quick_reply.text){
         request_body = {
             "recipient": {
                 "id": sender_psid
@@ -100,20 +83,7 @@ function callSendAPI(sender_psid, response, quick_reply="no") {
                 "id": sender_psid
             },
             "messaging_type": "RESPONSE",
-            "message":{
-              "text": "Hello! Would you like to answer few questions?",
-              "quick_replies":[
-                {
-                  "content_type":"text",
-                  "title":"Yes",
-                  "payload": "yes"
-                },{
-                  "content_type":"text",
-                  "title":"No",
-                  "payload": "no"
-                }
-              ]
-            }
+            "message": quick_reply
         };
     }
     
@@ -133,26 +103,19 @@ function callSendAPI(sender_psid, response, quick_reply="no") {
     });
 }
 
-function firstTrait(nlp, name) {
-    return nlp && nlp.entities && nlp.traits[name] && nlp.traits[name][0];
-}
-
 let user_first_name = "";
 let user_birth_date = "";
+let latest_message = "";
 
 function handleMessage(sender_psid, message) {
-    // check greeting is here and is confident
+    // check kind of message
     try {
         if (message.quick_reply) {
-            handleQuickReply();
+            handleQuickReply(sender_psid, message);
         } else if (message.attachments) {
                 handleAttachmentMessage();
         } else if (message.text) {
                 handleTextMessage(sender_psid, message);
-        } else if (event.postback) {
-                handlePostback();
-        } else if (event.referral) {
-                handleReferral();
         } else{
             callSendAPI(sender_psid,`The bot needs more training. You said "${message.text}". Try to say "Hi".`);
         }
@@ -167,19 +130,136 @@ function handleTextMessage(sender_psid, message){
     let mess = message.text;
     mess = mess.toLowerCase();
 
+    latest_message = mess;
+
     // message.nlp did not work
     let greeting = ["hi", "hello"];
     let accept_conv = ["yup", "yes", "yeah"];
-    let deny_conv = ["no", "nah"];
+    let deny_conv = ["no", "nah", "nope", "not now", "maybe later"];
 
-    if(greeting.includes(mess)){
-        callSendAPI(sender_psid,`Hello! Would you like to answer few questions?`, "yes");
+    let resp;
+
+    if(greeting.includes(mess) || mess === "#start_over"){
+        if(!user_first_name){
+            resp = {
+                "text": "Hello! Would you like to answer few questions?",
+                "quick_replies":[
+                  {
+                    "content_type":"text",
+                    "title":"Sure",
+                    "payload": "sure"
+                  },{
+                    "content_type":"text",
+                    "title":"Not now",
+                    "payload": "not now"
+                  }
+                ]
+              }
+            callSendAPI(sender_psid,``, res);
+        } else if(user_birth_date){
+            callSendAPI(sender_psid,`Hello! Would you like to answer few questions?`, "yes");
+        } else{
+
+        }
+
     }
     else if(accept_conv.includes(mess)){
 
     }
     else if (deny_conv.includes(mess)){
+        callSendAPI(sender_psid,`Thank you for your answer. If you wish to start this conversation again write "#start_over". Goodbye 🖐`);
+    }
+    else {
+        let resp;
 
+        if(!user_first_name){
+            resp = {
+                "text": "Is " + latest_message + " your first name?",
+                "quick_replies":[
+                  {
+                    "content_type":"text",
+                    "title": "Yes",
+                    "payload": "yes"
+                  },{
+                    "content_type":"text",
+                    "title":"No",
+                    "payload": "no"
+                  }
+                ]
+            };
+
+            callSendAPI(sender_psid,``, resp);
+        } else if (!user_birth_date){
+            resp = {
+                "text": "Is " + latest_message + " your birth date?",
+                "quick_replies":[
+                  {
+                    "content_type":"text",
+                    "title": "Yep",
+                    "payload": "yep"
+                  },{
+                    "content_type":"text",
+                    "title":"Not at all",
+                    "payload": "not at all"
+                  }
+                ]
+            };
+
+            callSendAPI(sender_psid,``, resp);
+        }
+        else {
+            callSendAPI(sender_psid,`Thank you for your answer. If you wish to start this conversation again write "#start_over". Goodbye 🖐`);
+        }
+    }
+}
+
+function handleQuickReply(sender_psid, message){
+    let mess = message.text;
+    mess = mess.toLowerCase();
+
+    // user agreed to answer questions
+    if(mess === "sure"){
+        if(!user_first_name){
+            callSendAPI(sender_psid,`First, please write below your first name`);
+        }
+        else {
+            callSendAPI(sender_psid,`The bot needs more training. You said "${message.text}". Try to say "Hi".`);
+        }
+    }
+    // user agreed on his first name
+    else if (mess === "yes") {
+        user_first_name = latest_message;
+        console.log(user_first_name);
+
+        callSendAPI(sender_psid,`You agreed that your first name is ${user_first_name}. Secondly, we would like to know your birth date. Write it down below like the example: 1987-03-25`);
+    }
+    // user agreed on his birth date
+    else if (mess === "yep"){
+        user_birth_date = latest_message;
+        console.log(user_birth_date);
+
+        let resp = {
+            "text": `You agreed that your birth date is ${user_birth_date}. Would you like to know how many days are until your next birtday?`,
+            "quick_replies":[
+              {
+                "content_type":"text",
+                "title": "I do",
+                "payload": "i do"
+              },{
+                "content_type":"text",
+                "title":"Not interested",
+                "payload": "not interested"
+              }
+            ]
+        };
+
+        callSendAPI(sender_psid,``, resp);
+    }
+    else if (mess === "i do"){
+        callSendAPI(sender_psid,`There are n days until your next birthday. Would you like a present?`);
+    }
+    else if (mess === "not now" || mess === "no" || mess === "not at all" || mess === "not interested"){
+            callSendAPI(sender_psid,`Thank you for your answer. If you wish to start this conversation again write "#start_over". Goodbye 🖐`);
     }
     else {
         callSendAPI(sender_psid,`The bot needs more training. You said "${message.text}". Try to say "Hi".`);
