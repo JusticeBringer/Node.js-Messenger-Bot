@@ -40,7 +40,7 @@ let postWebhook = (req, res) =>{
 
 let getWebhook = (req, res) => {
     // Your verify token. Should be a random string.
-    let VERIFY_TOKEN = process.env.MY_VERIFY_FB_TOKEN;
+    let VERIFY_TOKEN = process.env.VERIFY_TOKEN;
 
     // Parse the query params
     let mode = req.query['hub.mode'];
@@ -94,7 +94,7 @@ function callSendAPI(sender_psid, response) {
     // Send the HTTP request to the Messenger Platform
     request({
         "uri": "https://graph.facebook.com/v7.0/me/messages",
-        "qs": { "access_token": process.env.FB_PAGE_TOKEN },
+        "qs": { "access_token": process.env.PAGE_ACCESS_TOKEN },
         "method": "POST",
         "json": request_body
     }, (err, res, body) => {
@@ -113,8 +113,10 @@ function firstTrait(nlp, name) {
 function handleMessage(sender_psid, message) {
     // check greeting is here and is confident
     const greeting = firstTrait(message.nlp, 'greetings');
+    console.log(greeting);
+    
     // let tx = "Hmm " + greeting + " " + greeting.confidence + " .";
-    console.log(greeting + " " + greeting.confidence + " " + message);
+    // console.log(greeting + " " + greeting.confidence + " " + message);
     if (greeting && greeting.confidence > 0.8) {
         callSendAPI(sender_psid,`Hello there!`);
     } else { 
