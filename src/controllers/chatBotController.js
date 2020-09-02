@@ -188,7 +188,7 @@ function handleTextMessage(sender_psid, message){
     if(greeting.includes(mess) || mess === "#start_over"){
         if(user_first_name === ""){
             resp = {
-                "text": "(By continuing this conversation you agree to usage of your personal information. Say 'No' if you wish to stop the conversation.) \nHello! Would you like to answer few questions?",
+                "text": "(By continuing this conversation you agree to usage of your personal information. Say 'No' if you wish to stop the conversation.) \n\nHello! Would you like to answer few questions?",
                 "quick_replies":[
                   {
                     "content_type":"text",
@@ -210,7 +210,7 @@ function handleTextMessage(sender_psid, message){
     // accept case
     else if(accept_conv.includes(mess)){
         if(user_first_name === ""){
-            if (countWords(latest_message) === 1 && !accept_conv.includes(latest_message)){
+            if (countWords(latest_message) === 1 && prev_latest_me.includes("first name")){
                 user_first_name = capitalizeFirstLetter(latest_message);
                 console.log(user_first_name);
                
