@@ -208,7 +208,7 @@ function handleTextMessage(sender_psid, message){
     obj.id = ARR_MESSAGES.length;
     obj.text = mess;
 
-    if(COUNT_MESSAGES % 2){
+    if((COUNT_MESSAGES % 2) != 0){
         ARR_MESSAGES.push(obj);
         saveJson(ARR_MESSAGES, "messages.json");
     }
