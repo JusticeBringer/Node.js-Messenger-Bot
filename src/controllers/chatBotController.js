@@ -165,9 +165,9 @@ function handleTextMessage(sender_psid, message){
 
     latest_message = mess;
 
-    // message.nlp did not work
+    // message.nlp did not work -> made a workaround
     let greeting = ["hi", "hey", "hello"];
-    let accept_conv = ["yup", "yes", "yeah", "sure"];
+    let accept_conv = ["yup", "yes", "yeah", "sure", "yep"];
     let deny_conv = ["no", "nah", "nope", "not now", "maybe later"];
     let thanks_conv = ["thanks", "thx", "thank you", "thank you very much", "thanks a lot"];
 
@@ -181,7 +181,7 @@ function handleTextMessage(sender_psid, message){
 
     // greeting case
     if(greeting.includes(mess) || mess === "#start_over"){
-        if(!user_first_name){
+        if(user_first_name === ""){
             resp = {
                 "text": "Hello! Would you like to answer few questions?",
                 "quick_replies":[
@@ -204,7 +204,7 @@ function handleTextMessage(sender_psid, message){
     }
     // accept case
     else if(accept_conv.includes(mess)){
-        if(!user_first_name){
+        if(user_first_name === ""){
             if (countWords(latest_message) === 1){
                 user_first_name = capitalizeFirstLetter(latest_message);
                 console.log(user_first_name);
@@ -215,7 +215,7 @@ function handleTextMessage(sender_psid, message){
                 callSendAPI(sender_psid,`First, please write below your first name`);
             }
         }
-        else if (!user_birth_date){
+        else if (user_birth_date === ""){
             if (countWords(latest_message) === 1){
                 user_birth_date = latest_message;
                 console.log(user_birth_date);
