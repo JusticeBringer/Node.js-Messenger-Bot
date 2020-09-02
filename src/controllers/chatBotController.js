@@ -161,17 +161,19 @@ function handleTextMessage(sender_psid, message){
 
     // message.nlp did not work
     let greeting = ["hi", "hey", "hello"];
-    let accept_conv = ["yup", "yes", "yeah"];
+    let accept_conv = ["yup", "yes", "yeah", "sure"];
     let deny_conv = ["no", "nah", "nope", "not now", "maybe later"];
     let thanks_conv = ["thanks", "thx", "thank you", "thank you very much", "thanks a lot"];
 
     let resp;
 
+    // reinitialize conversation
     if(mess === "#start_over"){
         user_first_name = "";
         user_birth_date = "";
     }
 
+    // greeting case
     if(greeting.includes(mess) || mess === "#start_over"){
         if(!user_first_name){
             resp = {
@@ -194,18 +196,32 @@ function handleTextMessage(sender_psid, message){
         }
 
     }
+    // accept case
     else if(accept_conv.includes(mess)){
-
+        if(!user_first_name){
+            callSendAPI(sender_psid,`First, please write below your first name`);
+        }
+        else if (!user_birth_date){
+            callSendAPI(sender_psid,`You agreed that your first name is ${user_first_name}. Secondly, we would like to know your birth date. Write it down below in the format YYYY-MM-DD. Example: 1987-03-25`);
+        }
+        else {
+            callSendAPI(sender_psid,`The bot needs more training. You said "${message.text}". Try to say "Hi".`);
+        }
+        
     }
+    // deny case
     else if (deny_conv.includes(mess)){
         callSendAPI(sender_psid,`Thank you for your answer. If you wish to start this conversation again write "#start_over". Goodbye 🖐`);
     }
+    // gratitude case
     else if (thanks_conv.includes(mess)){
         callSendAPI(sender_psid,`You're welcome! If you wish to start this conversation again write "#start_over". Goodbye 🖐`);
     }
+    // user may have introduced first name and/or birth date
     else {
         let resp;
 
+        // if we don't know user first name yet
         if(!user_first_name){
             latest_message = capitalizeFirstLetter(latest_message);
             resp = {
@@ -224,7 +240,9 @@ function handleTextMessage(sender_psid, message){
             };
 
             callSendAPI(sender_psid,``, resp);
-        } else if (!user_birth_date){
+
+        } // if we don't know user birth date yet
+         else if (!user_birth_date){
             resp = {
                 "text": "Is " + latest_message + " your birth date?",
                 "quick_replies":[
@@ -242,15 +260,19 @@ function handleTextMessage(sender_psid, message){
 
             callSendAPI(sender_psid,``, resp);
         }
+        // something else
         else {
             callSendAPI(sender_psid,`Thank you for your answer. If you wish to start this conversation again write "#start_over". Goodbye 🖐`);
         }
     }
 }
+
+// function to capitalize first letter of a word
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+// function to handle quick replies
 function handleQuickReply(sender_psid, message){
     let mess = message.text;
     mess = mess.toLowerCase();
@@ -303,6 +325,7 @@ function handleQuickReply(sender_psid, message){
 
         callSendAPI(sender_psid,``, resp);
     }
+    // user agreed to know birth date days
     else if (mess === "i do"){
         var today = new Date();
 
@@ -311,13 +334,15 @@ function handleQuickReply(sender_psid, message){
         var user_month = parseInt(user_birth_date.substring(5, 7), 10);
         var user_day = parseInt(user_birth_date.substring(8, 10), 10);
 
+        // bad information introduced
         if(user_year >= today.getFullYear() || user_month > 12 || user_day > 31){
             callSendAPI(sender_psid,`Birth date introduced is false. If you wish to start this conversation again write "#start_over". Goodbye 🖐`);
         }
-        else{
+        else{ // valid information -> proceed to calculus
             const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
             let days_left = Math.round(Math.abs( ( (today - new Date(today.getFullYear(), user_month - 1, user_day)) / oneDay) ) );
 
+            // sending 2 carousel products
             let resp = {
                 "attachment":{
                     "type":"template",
@@ -390,6 +415,7 @@ function handlePostback(sender_psid, received_postback) {
 
     // Set the response based on the postback payload
     if (payload === 'looking headphones' || payload === 'looking mi band') {
+        // sending 2 similar carouself products
         let resp = {
             "attachment":{
                 "type":"template",
