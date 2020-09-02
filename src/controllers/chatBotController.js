@@ -205,13 +205,8 @@ function handleTextMessage(sender_psid, message){
     // accept case
     else if(accept_conv.includes(mess)){
         if(!user_first_name){
-            if (latest_message.includes("first name") || countWords(latest_message) === 1){
-                for(let i = 3; i < latest_message.length; i++){
-                    user_first_name += latest_message[i];
-        
-                    if(latest_message[i] === " ") break;
-                }
-                user_first_name = capitalizeFirstLetter(user_first_name);
+            if (countWords(latest_message) === 1){
+                user_first_name = capitalizeFirstLetter(latest_message);
                 console.log(user_first_name);
                
                 callSendAPI(sender_psid,`You agreed that your first name is ${user_first_name}. Secondly, we would like to know your birth date. Write it down below in the format YYYY-MM-DD. Example: 1987-03-25`);
@@ -221,13 +216,8 @@ function handleTextMessage(sender_psid, message){
             }
         }
         else if (!user_birth_date){
-            if (latest_message.includes("birth date") || countWords(latest_message) === 1){
-                for(let i = 3; i < latest_message.length; i++){
-                    user_birth_date += latest_message[i];
-        
-                    if(latest_message[i] === " ") break;
-                }
-                user_birth_date = capitalizeFirstLetter(user_birth_date);
+            if (countWords(latest_message) === 1){
+                user_birth_date = latest_message;
                 console.log(user_birth_date);
         
                 let resp = {
@@ -352,7 +342,6 @@ function handleQuickReply(sender_psid, message){
 
             if(latest_message[i] === " ") break;
         }
-        user_birth_date = capitalizeFirstLetter(user_birth_date);
         console.log(user_birth_date);
 
         let resp = {
