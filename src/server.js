@@ -19,6 +19,6 @@ initWebRoute(app);
 let port = process.env.PORT || 8080;
 
 app.listen(port, ()=>{
-   console.log(`App is running at the port ${port}`) ;
-   console.log(`Press CTRL^C to stop ${port}`) ;
+   console.log(`Application is running on port ${port}`) ;
+   console.log(`Press CTRL^C to stop the application`) ;
 });
