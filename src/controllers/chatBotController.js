@@ -209,11 +209,11 @@ function handleTextMessage(sender_psid, message){
     obj.text = mess;
 
     // only write user messages
-    COUNT_MESSAGES += 1;
     if (COUNT_MESSAGES % 2){
         ARR_MESSAGES.push(obj);
         saveJson(ARR_MESSAGES, "messages.json");
     }
+    COUNT_MESSAGES += 1;
 
     PREV_OF_PREV = PREV_OF_LATEST;
     PREV_OF_LATEST = LATEST_MESSAGE;
