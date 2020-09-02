@@ -139,8 +139,8 @@ function countWords(str) {
 // from previous latest message
 function extractName(){
     let name = "";
-    for(let i = 20; i < prev_latest_me.length; i++){
-        if (prev_latest_me[i] === '"') break;
+    for(let i = 3; i < prev_latest_me.length; i++){
+        if (prev_latest_me[i] === ' ') break;
 
         name += prev_latest_me[i];
     }
@@ -254,7 +254,7 @@ function handleTextMessage(sender_psid, message){
         }
         else if (user_birth_date === ""){
             if (countWords(latest_message) === 1 && (extractDate().split("-").length - 1) === 2){
-                user_birth_date = latest_message;
+                user_birth_date = prev_latest_me;
                 console.log(user_birth_date);
         
                 let resp = {
