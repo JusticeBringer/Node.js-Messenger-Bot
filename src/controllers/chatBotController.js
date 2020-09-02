@@ -138,6 +138,7 @@ function countWords(str) {
 let user_first_name = "";
 let user_birth_date = "";
 let latest_message = "";
+let prev_latest_me = "";
 
 function handleMessage(sender_psid, message) {
     // check kind of message
@@ -163,6 +164,7 @@ function handleTextMessage(sender_psid, message){
     let mess = message.text;
     mess = mess.toLowerCase();
 
+    prev_latest_me = latest_message;
     latest_message = mess;
 
     // message.nlp did not work -> made a workaround
