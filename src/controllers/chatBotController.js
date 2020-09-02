@@ -274,22 +274,52 @@ function handleQuickReply(sender_psid, message){
     }
     else if (mess === "i do"){
         var today = new Date();
-        var dd = String(today.getDate()).padStart(2, '0');
-        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-        var yyyy = today.getFullYear();
 
-        var user_year = user_birth_date.substring(0, 4);
-        var user_month = user_birth_date.substring(5, 7);
-        var user_day = user_birth_date.substring(8, 10);
+        // we extract user birth date information in decimal
+        var user_year = parseInt(user_birth_date.substring(0, 4), 10);
+        var user_month = parseInt(user_birth_date.substring(5, 7), 10);
+        var user_day = parseInt(user_birth_date.substring(8, 10), 10);
 
-        if(user_year >= yyyy){
+        if(user_year >= today.getFullYear() || user_month > 12 || user_day > 31){
             callSendAPI(sender_psid,`Birth date introduced is false. If you wish to start this conversation again write "#start_over". Goodbye 🖐`);
         }
         else{
-            const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
-            let days_left = Math.round(Math.abs( ( (today - new Date(user_year, user_day, user_month)) / oneDay) / (yyyy - user_year)) );
+            let days_left = Math.round(Math.abs(today - today(today.getFullYear(), user_month - 1, user_day)));
 
-            callSendAPI(sender_psid,`There are ${days_left} days until your next birthday. Would you like a present?`);
+            let resp = {
+                "text": `There are ${days_left} days until your next birthday. Here are some gifts you can buy for yourself 🙂`,
+                "attachment":{
+                    "type":"template",
+                    "payload":{
+                      "template_type":"generic",
+                      "elements":[
+                         {
+                          "title":"Welcome!",
+                          "image_url":"https://petersfancybrownhats.com/company_image.png",
+                          "subtitle":"We have the right hat for everyone.",
+                          "default_action": {
+                            "type": "web_url",
+                            "url": "https://petersfancybrownhats.com/view?item=103",
+                            "webview_height_ratio": "tall",
+                          },
+                          "buttons":[
+                            {
+                              "type":"web_url",
+                              "url":"https://petersfancybrownhats.com",
+                              "title":"View Website"
+                            },{
+                              "type":"postback",
+                              "title":"Start Chatting",
+                              "payload":""
+                            }              
+                          ]      
+                        }
+                      ]
+                    }
+                }
+            };
+
+            callSendAPI(sender_psid,``, resp);
         }
     }
     else if (mess === "not now" || mess === "no" || mess === "not at all" || mess === "not interested"){
