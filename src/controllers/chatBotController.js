@@ -233,12 +233,22 @@ function handleTextMessage(sender_psid, message){
     // accept case
     else if(accept_conv.includes(mess)){
         if(user_first_name === ""){
-            if (countWords(latest_message) === 1 && prev_latest_me.includes("first name")){
-                user_first_name = capitalizeFirstLetter(extractName());
-                console.log(user_first_name);
-               
-                callSendAPI(sender_psid,`We will take your first name as ${user_first_name}. Secondly, we would like to know your birth date. Write it down below in the format YYYY-MM-DD. Example: 1987-03-25`);
-            }
+            if (countWords(latest_message) === 1){
+                for(var i = 0; i < accept_conv.length; i++){
+                    if( mess.includes(accept_conv[i]) )
+                      break;
+                  }
+                  
+                if(i !== accept_conv.length) {
+                    user_first_name = capitalizeFirstLetter(extractName());
+                    console.log(user_first_name);
+                   
+                    callSendAPI(sender_psid,`We will take your first name as ${user_first_name}. Secondly, we would like to know your birth date. Write it down below in the format YYYY-MM-DD. Example: 1987-03-25`);    
+                }
+                else{
+                    callSendAPI(sender_psid,`First, please write below your first name`);
+                }
+             }
             else{
                 callSendAPI(sender_psid,`First, please write below your first name`);
             }
