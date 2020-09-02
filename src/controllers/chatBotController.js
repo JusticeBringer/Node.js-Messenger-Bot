@@ -2,7 +2,7 @@ require("dotenv").config();
 import request from "request";
 
 // writing to file
-let fs = require('fs');
+import { writeFileSync } from 'fs';
 
 // global variables used for conversation information
 let USER_FIRST_NAME = "";
@@ -13,8 +13,8 @@ let PREV_OF_PREV = "";
 let ARR_MESSAGES = [];
 
 function saveJson(obJson, numeFis){
-    let data = JSON.stringify(obJson);//transform in JSON
-    fs.writeFileSync(numeFis, data);//scriu JSON-ul in fisier (inlocuind datele vechi)
+    let data = JSON.stringify(obJson);
+    writeFileSync(numeFis, data);
 }
 
 let postWebhook = (req, res) =>{
