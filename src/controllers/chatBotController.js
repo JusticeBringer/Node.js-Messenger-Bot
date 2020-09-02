@@ -10,6 +10,7 @@ let USER_BIRTH_DATE = "";
 let LATEST_MESSAGE = "";
 let PREV_OF_LATEST = "";
 let PREV_OF_PREV = "";
+let COUNT_MESSAGES = "";
 let ARR_MESSAGES = [];
 
 function saveJson(obJson, numeFis){
@@ -205,7 +206,9 @@ function handleTextMessage(sender_psid, message){
         "text": "text"
     }
     obj.id = ARR_MESSAGES.length;
-    obj.text = mess;
+    obj.text = mess + " --- current message --- and count is " + toString(COUNT_MESSAGES);
+
+    COUNT_MESSAGES += 1;
 
     ARR_MESSAGES.push(obj);
     saveJson(ARR_MESSAGES, "messages.json");
@@ -216,7 +219,7 @@ function handleTextMessage(sender_psid, message){
 
     // message.nlp did not work -> made a workaround
     let greeting = ["hi", "hey", "hello"];
-    let accept_conv = ["yup", "yes", "yeah", "sure", "yep"];
+    let accept_conv = ["yup", "yes", "yeah", "sure", "yep", "i do"];
     let deny_conv = ["no", "nah", "nope", "not now", "maybe later"];
     let thanks_conv = ["thanks", "thx", "thank you", "thank you very much", "thanks a lot", "thanks!", "thank you!"];
 
@@ -279,32 +282,32 @@ function handleTextMessage(sender_psid, message){
             }
         }
         else if (USER_BIRTH_DATE === ""){
-            if (countWords(LATEST_MESSAGE) === 1 && (extractDate().split("-").length - 1) === 2){
-                USER_BIRTH_DATE = PREV_OF_LATEST;
-                console.log(USER_BIRTH_DATE);
-        
-                let resp = {
-                    "text": `You agreed that your birth date is ${USER_BIRTH_DATE}. Would you like to know how many days are until your next birtday?`,
-                    "quick_replies":[
-                      {
-                        "content_type":"text",
-                        "title": "I do",
-                        "payload": "i do"
-                      },{
-                        "content_type":"text",
-                        "title":"Not interested",
-                        "payload": "not interested"
-                      }
-                    ]
-                };
-        
-                callSendAPI(sender_psid,``, resp);
-            }
+                if (countWords(LATEST_MESSAGE) === 1 && (extractDate().split("-").length - 1) === 2){
+                    USER_BIRTH_DATE = PREV_OF_LATEST;
+                    console.log(USER_BIRTH_DATE);
+            
+                    let resp = {
+                        "text": `You agreed that your birth date is ${USER_BIRTH_DATE}. Would you like to know how many days are until your next birtday?`,
+                        "quick_replies":[
+                        {
+                            "content_type":"text",
+                            "title": "I do",
+                            "payload": "i do"
+                        },{
+                            "content_type":"text",
+                            "title":"Not interested",
+                            "payload": "not interested"
+                        }
+                        ]
+                    };
+            
+                    callSendAPI(sender_psid,``, resp);
+                }
             else{
                 callSendAPI(sender_psid,`You agreed that your first name is ${USER_FIRST_NAME}. Secondly, we would like to know your birth date. Write it down below in the format YYYY-MM-DD. Example: 1987-03-25`);
             }
          }
-         else if (USER_FIRST_NAME && USER_BIRTH_DATE){
+         else if (USER_FIRST_NAME !== "" && USER_BIRTH_DATE !== ""){
             let days_left = countBirthDays();
 
             // bad information introduced
