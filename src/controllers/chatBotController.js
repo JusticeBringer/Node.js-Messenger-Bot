@@ -206,7 +206,7 @@ function handleTextMessage(sender_psid, message){
         "text": "text"
     }
     obj.id = ARR_MESSAGES.length;
-    obj.text = mess + " --- current message --- and count is " + toString(COUNT_MESSAGES);
+    obj.text = mess + " --- current message --- and count is " + COUNT_MESSAGES;
 
     COUNT_MESSAGES += 1;
 
