@@ -135,6 +135,29 @@ function countWords(str) {
     return matches ? matches.length : 0;
 }
 
+// function used to extract user first name 
+// from previous latest message
+function extractName(){
+    let name = "";
+    for(let i = 20; i < prev_latest_me.length; i++){
+        if (prev_latest_me[i] === '"') break;
+
+        name += prev_latest_me[i];
+    }
+    return name;
+}
+
+// function to extract date given by user
+function extractDate(){
+    let dt = "";
+    for(let i = 3; i < prev_latest_me.length; i++){
+        if (prev_latest_me[i] === ' ') break;
+
+        dt += prev_latest_me[i];
+    }
+    return dt;
+}
+
 let user_first_name = "";
 let user_birth_date = "";
 let latest_message = "";
@@ -211,7 +234,7 @@ function handleTextMessage(sender_psid, message){
     else if(accept_conv.includes(mess)){
         if(user_first_name === ""){
             if (countWords(latest_message) === 1 && prev_latest_me.includes("first name")){
-                user_first_name = capitalizeFirstLetter(latest_message);
+                user_first_name = capitalizeFirstLetter(extractName());
                 console.log(user_first_name);
                
                 callSendAPI(sender_psid,`We will take your first name as ${user_first_name}. Secondly, we would like to know your birth date. Write it down below in the format YYYY-MM-DD. Example: 1987-03-25`);
@@ -221,7 +244,7 @@ function handleTextMessage(sender_psid, message){
             }
         }
         else if (user_birth_date === ""){
-            if (countWords(latest_message) === 1 && (latest_message.split("-").length - 1) === 2){
+            if (countWords(latest_message) === 1 && (extractDate().split("-").length - 1) === 2){
                 user_birth_date = latest_message;
                 console.log(user_birth_date);
         
