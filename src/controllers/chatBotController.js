@@ -196,7 +196,7 @@ function handleTextMessage(sender_psid, message){
     let greeting = ["hi", "hey", "hello"];
     let accept_conv = ["yup", "yes", "yeah", "sure", "yep"];
     let deny_conv = ["no", "nah", "nope", "not now", "maybe later"];
-    let thanks_conv = ["thanks", "thx", "thank you", "thank you very much", "thanks a lot"];
+    let thanks_conv = ["thanks", "thx", "thank you", "thank you very much", "thanks a lot", "thanks!", "thank you!"];
 
     let resp;
 
@@ -204,6 +204,9 @@ function handleTextMessage(sender_psid, message){
     if(mess === "#start_over"){
         user_first_name = "";
         user_birth_date = "";
+        latest_message = "";
+        prev_latest_me = "";
+        prev_of_prev = "";
     }
 
     // greeting case
