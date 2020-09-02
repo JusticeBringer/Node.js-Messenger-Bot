@@ -384,7 +384,7 @@ function countBirthDays(){
 
 // function get inital birth gift
 function initialGifts(){
-    return resp = {
+    let resp = {
         "attachment":{
             "type":"template",
             "payload":{
@@ -436,6 +436,8 @@ function initialGifts(){
             }
         }
     };
+
+    return resp;
 }
 
 // function to handle quick replies
