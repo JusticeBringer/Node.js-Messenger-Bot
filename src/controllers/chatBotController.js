@@ -206,7 +206,7 @@ function handleTextMessage(sender_psid, message){
         "text": "text"
     }
     obj.id = ARR_MESSAGES.length;
-    obj.text = mess;
+    obj.text = PREV_OF_LATEST;
 
     // only write user messages
     if ((COUNT_MESSAGES % 2) != 0){
