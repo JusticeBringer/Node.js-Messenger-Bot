@@ -10,6 +10,7 @@ let USER_BIRTH_DATE = "";
 let LATEST_MESSAGE = "";
 let PREV_OF_LATEST = "";
 let PREV_OF_PREV = "";
+let COUNT_MESSAGES = "";
 let ARR_MESSAGES = [];
 
 function saveJson(obJson, numeFis){
@@ -207,8 +208,12 @@ function handleTextMessage(sender_psid, message){
     obj.id = ARR_MESSAGES.length;
     obj.text = mess;
 
-    ARR_MESSAGES.push(obj);
-    saveJson(ARR_MESSAGES, "messages.json");
+    // only write user messages
+    COUNT_MESSAGES += 1;
+    if (COUNT_MESSAGES % 2){
+        ARR_MESSAGES.push(obj);
+        saveJson(ARR_MESSAGES, "messages.json");
+    }
 
     PREV_OF_PREV = PREV_OF_LATEST;
     PREV_OF_LATEST = LATEST_MESSAGE;
