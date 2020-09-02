@@ -13,6 +13,8 @@ let getHeadLinks = (req, res) => {
     return res.render("partials/headLinks.ejs");
 };
 
-export const getHomepage = getHomepage;
-export const getMessages = getMessages;
-export const getHeadLinks = getHeadLinks;
+module.exports = {
+    getHomepage: getHomepage,
+    getMessages: getMessages,
+    getHeadLinks: getHeadLinks
+};
