@@ -284,7 +284,7 @@ function handleQuickReply(sender_psid, message){
             callSendAPI(sender_psid,`Birth date introduced is false. If you wish to start this conversation again write "#start_over". Goodbye 🖐`);
         }
         else{
-            let days_left = Math.round(Math.abs(today - today(today.getFullYear(), user_month - 1, user_day)));
+            let days_left = Math.round(Math.abs(today - new Date(today.getFullYear(), user_month - 1, user_day)));
 
             let resp = {
                 "text": `There are ${days_left} days until your next birthday. Here are some gifts you can buy for yourself 🙂`,
