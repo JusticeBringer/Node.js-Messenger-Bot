@@ -287,7 +287,6 @@ function handleQuickReply(sender_psid, message){
             let days_left = Math.round(Math.abs(today - new Date(today.getFullYear(), user_month - 1, user_day)));
 
             let resp = {
-                "text": `There are ${days_left} days until your next birthday. Here are some gifts you can buy for yourself 🙂`,
                 "attachment":{
                     "type":"template",
                     "payload":{
@@ -319,6 +318,7 @@ function handleQuickReply(sender_psid, message){
                 }
             };
 
+            callSendAPI(sender_psid,`There are ${days_left} days until your next birthday. Here are some gifts you can buy for yourself 🙂`);
             callSendAPI(sender_psid,``, resp);
         }
     }
