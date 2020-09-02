@@ -11,6 +11,7 @@ let getMessages = (req, res) => {
         if (err) throw err; 
       
         all_messages = data;
+        return res.render(data);
         console.log(data);
     });
 
