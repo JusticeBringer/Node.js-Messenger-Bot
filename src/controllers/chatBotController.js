@@ -142,7 +142,8 @@ function handleMessage(sender_psid, message) {
                 handleAttachmentMessage();
         } else if (message.text) {
                 handleTextMessage(sender_psid, message);
-        } else{
+        } 
+        else{
             callSendAPI(sender_psid,`The bot needs more training. You said "${message.text}". Try to say "Hi".`);
         }
     } 
@@ -162,6 +163,7 @@ function handleTextMessage(sender_psid, message){
     let greeting = ["hi", "hey", "hello"];
     let accept_conv = ["yup", "yes", "yeah"];
     let deny_conv = ["no", "nah", "nope", "not now", "maybe later"];
+    let thanks_conv = ["thanks", "thx", "thank you", "thank you very much", "thanks a lot"];
 
     let resp;
 
@@ -197,6 +199,9 @@ function handleTextMessage(sender_psid, message){
     }
     else if (deny_conv.includes(mess)){
         callSendAPI(sender_psid,`Thank you for your answer. If you wish to start this conversation again write "#start_over". Goodbye 🖐`);
+    }
+    else if (thanks_conv.includes(mess)){
+        callSendAPI(sender_psid,`You're welcome! If you wish to start this conversation again write "#start_over". Goodbye 🖐`);
     }
     else {
         let resp;
@@ -320,9 +325,9 @@ function handleQuickReply(sender_psid, message){
                       "template_type":"generic",
                       "elements":[
                          {
-                          "title":"Welcome!",
+                          "title":"COWIN E7s Headphones for $59.99 + $25.23 Shipping & Import Fees",
                           "image_url":"https://m.media-amazon.com/images/I/41WzHq0SkRL._AC_UY218_.jpg",
-                          "subtitle":"We have the right headphones for everyone.",
+                          "subtitle":"Active Noise Cancelling Headphones, with Bluetooth and Microphone",
                           "default_action": {
                             "type": "web_url",
                             "url": "https://www.amazon.com/Cancelling-Headphones-Bluetooth-Microphone-Comfortable/dp/B019U00D7K/ref=sr_1_1?dchild=1&keywords=headphones&qid=1599034241&s=specialty-aps&sr=1-1",
@@ -330,15 +335,36 @@ function handleQuickReply(sender_psid, message){
                           },
                           "buttons":[
                             {
-                              "type":"web_url",
-                              "url":"https://www.amazon.com",
-                              "title":"View Website"
+                                "type":"postback",
+                                "title":"See similar product",
+                                "payload":"looking headphones"
                             },{
                               "type":"postback",
-                              "title":"Start Chatting",
-                              "payload":"start chatting"
+                              "title":"Not what I was looking for",
+                              "payload":"not looking headphones"
                             }              
                           ]      
+                        },
+                        {
+                           "title":"Xiaomi Mi Band 4",
+                          "image_url":"https://images-na.ssl-images-amazon.com/images/I/51SQSEoSr8L._AC_SL1000_.jpg",
+                          "subtitle":"Incredible smartwatch",
+                          "default_action": {
+                            "type": "web_url",
+                            "url": "https://www.amazon.com/Xiaomi-Mi-Band-4/dp/B07T4ZH692/ref=sr_1_3?dchild=1&keywords=mi+band+4&qid=1599037215&sr=8-3",
+                            "webview_height_ratio": "tall",
+                          },
+                          "buttons":[
+                            {
+                                "type":"postback",
+                                "title":"See similar product",
+                                "payload":"looking mi band"
+                            },{
+                              "type":"postback",
+                              "title":"Not what I was looking for",
+                              "payload":"not looking mi band"
+                            }              
+                          ]  
                         }
                       ]
                     }
@@ -353,6 +379,69 @@ function handleQuickReply(sender_psid, message){
             callSendAPI(sender_psid,`Thank you for your answer. If you wish to start this conversation again write "#start_over". Goodbye 🖐`);
     }
     else {
+        callSendAPI(sender_psid,`The bot needs more training. You said "${message.text}". Try to say "Hi".`);
+    }
+}
+
+// Handles messaging_postbacks events
+function handlePostback(sender_psid, received_postback) {
+    // Get the payload for the postback
+    let payload = received_postback.payload;
+
+    // Set the response based on the postback payload
+    if (payload === 'looking headphones' || payload === 'looking mi band') {
+        let resp = {
+            "attachment":{
+                "type":"template",
+                "payload":{
+                  "template_type":"generic",
+                  "elements":[
+                     {
+                      "title":"Mpow 059 Headphones for $33.99 + $17.70 Shipping & Import Fees",
+                      "image_url":"https://images-na.ssl-images-amazon.com/images/I/617XS3ZQgUL._AC_SL1280_.jpg",
+                      "subtitle":"Bluetooth Headphones Over Ear, Hi-Fi Stereo Wireless Headset, Foldable",
+                      "default_action": {
+                        "type": "web_url",
+                        "url": "https://www.amazon.com/dp/B01NAJGGA2/ref=dp_cerb_2",
+                        "webview_height_ratio": "tall",
+                      },
+                      "buttons":[
+                        {
+                            "type":"web_url",
+                            "url":"https://www.amazon.com/s?k=headphones&crid=1TBFG5JJ5SKYQ&sprefix=head%2Caps%2C319&ref=nb_sb_ss_ts-ap-p_1_4",
+                            "title":"View more headphones"
+                        }            
+                      ]      
+                    },
+                    {
+                       "title":"Xiaomi Mi Band 5",
+                      "image_url":"https://images-na.ssl-images-amazon.com/images/I/61UZ41QdbCL._AC_SX679_.jpg",
+                      "subtitle":"Incredible smartwatch",
+                      "default_action": {
+                        "type": "web_url",
+                        "url": "https://www.amazon.com/Xiaomi-Band-Wristband-Magnetic-Bluetooth/dp/B089NS9JW2/ref=sr_1_3?dchild=1&keywords=mi+band&qid=1599036809&sr=8-3",
+                        "webview_height_ratio": "tall",
+                      },
+                      "buttons":[
+                        {
+                            "type":"web_url",
+                            "url":"https://www.amazon.com/s?k=mi+band&ref=nb_sb_noss_2",
+                            "title":"View more like this"
+                        }               
+                      ]  
+                    }
+                  ]
+                }
+            }
+        };
+
+        callSendAPI(sender_psid,`Here are 2 similar products based on earlier choice.`);
+        callSendPromo(sender_psid, resp);
+
+    } else if (payload === 'not looking headphones' || payload === 'not looking mi band') {  
+        callSendAPI(sender_psid,`Thank you for your answer. If you wish to start this conversation again write "#start_over". Goodbye 🖐`);
+    }
+    else{
         callSendAPI(sender_psid,`The bot needs more training. You said "${message.text}". Try to say "Hi".`);
     }
 }
