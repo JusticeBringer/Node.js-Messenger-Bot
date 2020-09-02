@@ -129,6 +129,12 @@ function callSendPromo(sender_psid, quick_reply){
     });
 }
 
+// function used to count number of words in a string
+function countWords(str) {
+    var matches = str.match(/[\w\d\’\'-]+/gi);
+    return matches ? matches.length : 0;
+}
+
 let user_first_name = "";
 let user_birth_date = "";
 let latest_message = "";
@@ -199,11 +205,52 @@ function handleTextMessage(sender_psid, message){
     // accept case
     else if(accept_conv.includes(mess)){
         if(!user_first_name){
-            callSendAPI(sender_psid,`First, please write below your first name`);
+            if (latest_message.includes("first name") || countWords(latest_message) === 1){
+                for(let i = 3; i < latest_message.length; i++){
+                    user_first_name += latest_message[i];
+        
+                    if(latest_message[i] === " ") break;
+                }
+                user_first_name = capitalizeFirstLetter(user_first_name);
+                console.log(user_first_name);
+               
+                callSendAPI(sender_psid,`You agreed that your first name is ${user_first_name}. Secondly, we would like to know your birth date. Write it down below in the format YYYY-MM-DD. Example: 1987-03-25`);
+            }
+            else{
+                callSendAPI(sender_psid,`First, please write below your first name`);
+            }
         }
         else if (!user_birth_date){
-            callSendAPI(sender_psid,`You agreed that your first name is ${user_first_name}. Secondly, we would like to know your birth date. Write it down below in the format YYYY-MM-DD. Example: 1987-03-25`);
-        }
+            if (latest_message.includes("birth date") || countWords(latest_message) === 1){
+                for(let i = 3; i < latest_message.length; i++){
+                    user_birth_date += latest_message[i];
+        
+                    if(latest_message[i] === " ") break;
+                }
+                user_birth_date = capitalizeFirstLetter(user_birth_date);
+                console.log(user_birth_date);
+        
+                let resp = {
+                    "text": `You agreed that your birth date is ${user_birth_date}. Would you like to know how many days are until your next birtday? (Please select an answer from list)`,
+                    "quick_replies":[
+                      {
+                        "content_type":"text",
+                        "title": "I do",
+                        "payload": "i do"
+                      },{
+                        "content_type":"text",
+                        "title":"Not interested",
+                        "payload": "not interested"
+                      }
+                    ]
+                };
+        
+                callSendAPI(sender_psid,``, resp);
+            }
+            else{
+                callSendAPI(sender_psid,`You agreed that your first name is ${user_first_name}. Secondly, we would like to know your birth date. Write it down below in the format YYYY-MM-DD. Example: 1987-03-25`);
+            }
+         }
         else {
             callSendAPI(sender_psid,`The bot needs more training. You said "${message.text}". Try to say "Hi".`);
         }
