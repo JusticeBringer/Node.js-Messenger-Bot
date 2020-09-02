@@ -103,6 +103,32 @@ function callSendAPI(sender_psid, response, quick_reply={"text": ""}) {
     });
 }
 
+// function for carouself gift
+function callSendPromo(sender_psid, quick_reply){
+    // Construct the message body
+    let request_body = {
+        "recipient": {
+            "id": sender_psid
+        },
+        "messaging_type": "RESPONSE",
+        "message": quick_reply
+    };
+
+    // Send the HTTP request to the Messenger Platform
+    request({
+        "uri": "https://graph.facebook.com/v7.0/me/messages",
+        "qs": { "access_token": process.env.PAGE_ACCESS_TOKEN },
+        "method": "POST",
+        "json": request_body
+    }, (err, res, body) => {
+        if (!err) {
+            console.log('message sent!');
+        } else {
+            console.error("Unable to send message:" + err);
+        }
+    });
+}
+
 let user_first_name = "";
 let user_birth_date = "";
 let latest_message = "";
@@ -320,7 +346,7 @@ function handleQuickReply(sender_psid, message){
             };
 
             callSendAPI(sender_psid,`There are ${days_left} days until your next birthday. Here are some gifts you can buy for yourself 🙂`);
-            callSendAPI(sender_psid,``, resp);
+            callSendPromo(sender_psid, resp);
         }
     }
     else if (mess === "not now" || mess === "no" || mess === "not at all" || mess === "not interested"){
