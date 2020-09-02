@@ -204,7 +204,7 @@ function handleTextMessage(sender_psid, message){
         "id" : 0,
         "text": "text"
     }
-    obj.id = ARR_MESSAGES.length();
+    obj.id = ARR_MESSAGES.length;
     obj.text = mess;
 
     ARR_MESSAGES.push(obj);
