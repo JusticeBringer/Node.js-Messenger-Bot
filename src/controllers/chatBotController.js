@@ -12,6 +12,11 @@ let PREV_OF_LATEST = "";
 let PREV_OF_PREV = "";
 let ARR_MESSAGES = [];
 
+function saveJson(obJson, numeFis){
+    let data = JSON.stringify(obJson);//transform in JSON
+    fs.writeFileSync(numeFis, data);//scriu JSON-ul in fisier (inlocuind datele vechi)
+}
+
 let postWebhook = (req, res) =>{
     // Parse the request body from the POST
     let body = req.body;
@@ -196,11 +201,7 @@ function handleTextMessage(sender_psid, message){
 
     // adding the message to all messages
     ARR_MESSAGES.push(mess);
-    fs.writeFile("messages.txt", JSON.stringify(ARR_MESSAGES), function(err) {
-        if (err) {
-            console.log(err);
-        }
-    });
+    saveJson(ARR_MESSAGES, "messages.json");
 
     PREV_OF_PREV = PREV_OF_LATEST;
     PREV_OF_LATEST = LATEST_MESSAGE;
