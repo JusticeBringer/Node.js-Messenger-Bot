@@ -5,16 +5,7 @@ let getHomepage = (req, res) => {
 };
 
 let getMessages = (req, res) => {
-    let all_messages;
-    
-    fs.readFile('messages.txt', (err, data) => { 
-        if (err) throw err; 
-      
-        all_messages = data;
-        return res.render(data);
-        console.log(data);
-    });
-
+    let all_messages = fs.readFileSync("messages.json");
     return res.render("ejs/messages.ejs", {messages: all_messages});
 };
 
