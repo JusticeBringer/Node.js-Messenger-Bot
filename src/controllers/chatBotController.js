@@ -162,6 +162,7 @@ let user_first_name = "";
 let user_birth_date = "";
 let latest_message = "";
 let prev_latest_me = "";
+let prev_of_prev = "";
 
 function handleMessage(sender_psid, message) {
     // check kind of message
@@ -187,6 +188,7 @@ function handleTextMessage(sender_psid, message){
     let mess = message.text;
     mess = mess.toLowerCase();
 
+    prev_of_prev = prev_latest_me;
     prev_latest_me = latest_message;
     latest_message = mess;
 
@@ -230,7 +232,7 @@ function handleTextMessage(sender_psid, message){
     // accept case
     else if(accept_conv.includes(mess)){
         if(user_first_name === ""){
-            if (countWords(latest_message) === 1 && !greeting.includes(extractName())){
+            if (countWords(latest_message) === 1 && !greeting.includes(prev_of_prev)){
                 for(var i = 0; i < accept_conv.length; i++){
                     if( mess.includes(accept_conv[i]) )
                       break;
