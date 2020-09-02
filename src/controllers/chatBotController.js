@@ -1,6 +1,14 @@
 require("dotenv").config();
 import request from "request";
 
+// global variables used for conversation information
+let USER_FIRST_NAME = "";
+let USER_BIRTH_DATE = "";
+let LATEST_MESSAGE = "";
+let PREV_OF_LATEST = "";
+let PREV_OF_PREV = "";
+let FIRST_TIME = "";
+
 let postWebhook = (req, res) =>{
     // Parse the request body from the POST
     let body = req.body;
@@ -139,10 +147,10 @@ function countWords(str) {
 // from previous latest message
 function extractName(){
     let name = "";
-    for(let i = 3; i < prev_latest_me.length; i++){
-        if (prev_latest_me[i] === ' ') break;
+    for(let i = 3; i < PREV_OF_LATEST.length; i++){
+        if (PREV_OF_LATEST[i] === ' ') break;
 
-        name += prev_latest_me[i];
+        name += PREV_OF_LATEST[i];
     }
     return name;
 }
@@ -150,19 +158,13 @@ function extractName(){
 // function to extract date given by user
 function extractDate(){
     let dt = "";
-    for(let i = 3; i < prev_latest_me.length; i++){
-        if (prev_latest_me[i] === ' ') break;
+    for(let i = 3; i < PREV_OF_LATEST.length; i++){
+        if (PREV_OF_LATEST[i] === ' ') break;
 
-        dt += prev_latest_me[i];
+        dt += PREV_OF_LATEST[i];
     }
     return dt;
 }
-
-let user_first_name = "";
-let user_birth_date = "";
-let latest_message = "";
-let prev_latest_me = "";
-let prev_of_prev = "";
 
 function handleMessage(sender_psid, message) {
     // check kind of message
@@ -175,7 +177,7 @@ function handleMessage(sender_psid, message) {
                 handleTextMessage(sender_psid, message);
         } 
         else{
-            callSendAPI(sender_psid,`The bot needs more training. You said "${message.text}". Try to say "Hi".`);
+            callSendAPI(sender_psid,`The bot needs more training. You said "${message.text}". Try to say "Hi" or "#start_over" to restart the conversation..`);
         }
     } 
     catch (error) {
@@ -185,12 +187,21 @@ function handleMessage(sender_psid, message) {
 }
 
 function handleTextMessage(sender_psid, message){
+    if( FIRST_TIME === 0){
+        localStorage.clear();
+        FIRST_TIME = 1;
+    }
+
+    // getting current message
     let mess = message.text;
     mess = mess.toLowerCase();
 
-    prev_of_prev = prev_latest_me;
-    prev_latest_me = latest_message;
-    latest_message = mess;
+    // adding the message to all messages
+    localStorage.setItem(toString(localStorage.length()), mess);
+
+    PREV_OF_PREV = PREV_OF_LATEST;
+    PREV_OF_LATEST = LATEST_MESSAGE;
+    LATEST_MESSAGE = mess;
 
     // message.nlp did not work -> made a workaround
     let greeting = ["hi", "hey", "hello"];
@@ -202,16 +213,17 @@ function handleTextMessage(sender_psid, message){
 
     // reinitialize conversation
     if(mess === "#start_over"){
-        user_first_name = "";
-        user_birth_date = "";
-        latest_message = "";
-        prev_latest_me = "";
-        prev_of_prev = "";
+        USER_FIRST_NAME = "";
+        USER_BIRTH_DATE = "";
+        LATEST_MESSAGE = "";
+        PREV_OF_LATEST = "";
+        PREV_OF_PREV = "";
+        FIRST_TIME = 0;
     }
 
     // greeting case
     if(greeting.includes(mess) || mess === "#start_over"){
-        if(user_first_name === ""){
+        if(USER_FIRST_NAME === ""){
             resp = {
                 "text": "(By continuing this conversation you agree to usage of your personal information. Say 'No' if you wish to stop the conversation.) \n\nHello! Would you like to answer few questions?",
                 "quick_replies":[
@@ -234,18 +246,18 @@ function handleTextMessage(sender_psid, message){
     }
     // accept case
     else if(accept_conv.includes(mess)){
-        if(user_first_name === ""){
-            if (countWords(latest_message) === 1 && !greeting.includes(prev_of_prev)){
+        if(USER_FIRST_NAME === ""){
+            if (countWords(LATEST_MESSAGE) === 1 && !greeting.includes(PREV_OF_PREV)){
                 for(var i = 0; i < accept_conv.length; i++){
                     if( mess.includes(accept_conv[i]) )
                       break;
                   }
                   
                 if(i !== accept_conv.length) {
-                    user_first_name = capitalizeFirstLetter(extractName());
-                    console.log(user_first_name);
+                    USER_FIRST_NAME = capitalizeFirstLetter(extractName());
+                    console.log(USER_FIRST_NAME);
                    
-                    callSendAPI(sender_psid,`We will take your first name as ${user_first_name}. Secondly, we would like to know your birth date. Write it down below in the format YYYY-MM-DD. Example: 1987-03-25`);    
+                    callSendAPI(sender_psid,`We will take your first name as ${USER_FIRST_NAME}. Secondly, we would like to know your birth date. Write it down below in the format YYYY-MM-DD. Example: 1987-03-25`);    
                 }
                 else{
                     callSendAPI(sender_psid,`First, please write below your first name`);
@@ -255,13 +267,13 @@ function handleTextMessage(sender_psid, message){
                 callSendAPI(sender_psid,`First, please write below your first name`);
             }
         }
-        else if (user_birth_date === ""){
-            if (countWords(latest_message) === 1 && (extractDate().split("-").length - 1) === 2){
-                user_birth_date = prev_latest_me;
-                console.log(user_birth_date);
+        else if (USER_BIRTH_DATE === ""){
+            if (countWords(LATEST_MESSAGE) === 1 && (extractDate().split("-").length - 1) === 2){
+                USER_BIRTH_DATE = PREV_OF_LATEST;
+                console.log(USER_BIRTH_DATE);
         
                 let resp = {
-                    "text": `You agreed that your birth date is ${user_birth_date}. Would you like to know how many days are until your next birtday?`,
+                    "text": `You agreed that your birth date is ${USER_BIRTH_DATE}. Would you like to know how many days are until your next birtday?`,
                     "quick_replies":[
                       {
                         "content_type":"text",
@@ -278,10 +290,10 @@ function handleTextMessage(sender_psid, message){
                 callSendAPI(sender_psid,``, resp);
             }
             else{
-                callSendAPI(sender_psid,`You agreed that your first name is ${user_first_name}. Secondly, we would like to know your birth date. Write it down below in the format YYYY-MM-DD. Example: 1987-03-25`);
+                callSendAPI(sender_psid,`You agreed that your first name is ${USER_FIRST_NAME}. Secondly, we would like to know your birth date. Write it down below in the format YYYY-MM-DD. Example: 1987-03-25`);
             }
          }
-         else if (user_first_name && user_birth_date){
+         else if (USER_FIRST_NAME && USER_BIRTH_DATE){
             let days_left = countBirthDays();
 
             // bad information introduced
@@ -314,10 +326,10 @@ function handleTextMessage(sender_psid, message){
         let resp;
 
         // if we don't know user first name yet
-        if(!user_first_name){
-            latest_message = capitalizeFirstLetter(latest_message);
+        if(!USER_FIRST_NAME){
+            LATEST_MESSAGE = capitalizeFirstLetter(LATEST_MESSAGE);
             resp = {
-                "text": "Is " + latest_message + " your first name?",
+                "text": "Is " + LATEST_MESSAGE + " your first name?",
                 "quick_replies":[
                   {
                     "content_type":"text",
@@ -334,9 +346,9 @@ function handleTextMessage(sender_psid, message){
             callSendAPI(sender_psid,``, resp);
 
         } // if we don't know user birth date yet
-         else if (!user_birth_date){
+         else if (!USER_BIRTH_DATE){
             resp = {
-                "text": "Is " + latest_message + " your birth date?",
+                "text": "Is " + LATEST_MESSAGE + " your birth date?",
                 "quick_replies":[
                   {
                     "content_type":"text",
@@ -369,9 +381,9 @@ function countBirthDays(){
     var today = new Date();
 
     // we extract user birth date information in decimal
-    var user_year = parseInt(user_birth_date.substring(0, 4), 10);
-    var user_month = parseInt(user_birth_date.substring(5, 7), 10);
-    var user_day = parseInt(user_birth_date.substring(8, 10), 10);
+    var user_year = parseInt(USER_BIRTH_DATE.substring(0, 4), 10);
+    var user_month = parseInt(USER_BIRTH_DATE.substring(5, 7), 10);
+    var user_day = parseInt(USER_BIRTH_DATE.substring(8, 10), 10);
 
     // bad information introduced
     if(user_year >= today.getFullYear() || user_month > 12 || user_day > 31){
@@ -450,7 +462,7 @@ function handleQuickReply(sender_psid, message){
 
     // user agreed to answer questions
     if(mess === "sure"){
-        if(!user_first_name){
+        if(!USER_FIRST_NAME){
             callSendAPI(sender_psid,`First, please write below your first name`);
         }
         else {
@@ -459,27 +471,27 @@ function handleQuickReply(sender_psid, message){
     }
     // user agreed on his first name
     else if (mess === "yes") {
-        for(let i = 3; i < latest_message.length; i++){
-            user_first_name += latest_message[i];
+        for(let i = 3; i < LATEST_MESSAGE.length; i++){
+            USER_FIRST_NAME += LATEST_MESSAGE[i];
 
-            if(latest_message[i] === " ") break;
+            if(LATEST_MESSAGE[i] === " ") break;
         }
-        user_first_name = capitalizeFirstLetter(user_first_name);
-        console.log(user_first_name);
+        USER_FIRST_NAME = capitalizeFirstLetter(USER_FIRST_NAME);
+        console.log(USER_FIRST_NAME);
 
-        callSendAPI(sender_psid,`You agreed that your first name is ${user_first_name}. Secondly, we would like to know your birth date. Write it down below in the format YYYY-MM-DD. Example: 1987-03-25`);
+        callSendAPI(sender_psid,`You agreed that your first name is ${USER_FIRST_NAME}. Secondly, we would like to know your birth date. Write it down below in the format YYYY-MM-DD. Example: 1987-03-25`);
     }
     // user agreed on his birth date
     else if (mess === "yep"){
-        for(let i = 3; i < latest_message.length; i++){
-            user_birth_date += latest_message[i];
+        for(let i = 3; i < LATEST_MESSAGE.length; i++){
+            USER_BIRTH_DATE += LATEST_MESSAGE[i];
 
-            if(latest_message[i] === " ") break;
+            if(LATEST_MESSAGE[i] === " ") break;
         }
-        console.log(user_birth_date);
+        console.log(USER_BIRTH_DATE);
 
         let resp = {
-            "text": `You agreed that your birth date is ${user_birth_date}. Would you like to know how many days are until your next birtday?`,
+            "text": `You agreed that your birth date is ${USER_BIRTH_DATE}. Would you like to know how many days are until your next birtday?`,
             "quick_replies":[
               {
                 "content_type":"text",
