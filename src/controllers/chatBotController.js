@@ -200,7 +200,14 @@ function handleTextMessage(sender_psid, message){
     mess = mess.toLowerCase();
 
     // adding the message to all messages
-    ARR_MESSAGES.push(mess);
+    let obj = {
+        "id" : 0,
+        "text": "text"
+    }
+    obj.id = ARR_MESSAGES.length();
+    obj.text = mess;
+
+    ARR_MESSAGES.push(obj);
     saveJson(ARR_MESSAGES, "messages.json");
 
     PREV_OF_PREV = PREV_OF_LATEST;
