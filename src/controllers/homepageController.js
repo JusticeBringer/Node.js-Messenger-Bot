@@ -5,19 +5,13 @@ let getHomepage = (req, res) => {
 };
 
 let getMessages = (req, res) => {
-    let all_messages = [];
-
-    let rawFile = new XMLHttpRequest();
-    rawFile.open("GET", file, false);
-    rawFile.onreadystatechange = function (){
-        if(rawFile.readyState === 4){
-            if(rawFile.status === 200 || rawFile.status == 0){
-                all_messages = rawFile.responseText;
-                return res.render("ejs/messages.ejs", {messages: all_messages});
-            }
-        }
-    }
-    rawFile.send(null);
+    let all_messages;
+    
+    fs.readFile('messages.txt', (err, data) => { 
+        if (err) throw err; 
+      
+        all_messages = data;
+    });
 
     return res.render("ejs/messages.ejs", {messages: all_messages});
 };
