@@ -10,7 +10,7 @@ let USER_BIRTH_DATE = "";
 let LATEST_MESSAGE = "";
 let PREV_OF_LATEST = "";
 let PREV_OF_PREV = "";
-let COUNT_MESSAGES = "";
+let COUNT_MESSAGES = 0;
 let ARR_MESSAGES = [];
 
 function saveJson(obJson, numeFis){
