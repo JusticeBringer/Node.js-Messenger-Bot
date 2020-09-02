@@ -1,6 +1,11 @@
 require("dotenv").config();
 import request from "request";
 
+if (typeof localStorage === "undefined" || localStorage === null) {
+    var LocalStorage = require('node-localstorage').LocalStorage;
+    localStorage = new LocalStorage('./scratch');
+ }
+
 // global variables used for conversation information
 let USER_FIRST_NAME = "";
 let USER_BIRTH_DATE = "";
