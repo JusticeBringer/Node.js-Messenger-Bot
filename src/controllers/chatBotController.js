@@ -233,7 +233,7 @@ function handleTextMessage(sender_psid, message){
     // accept case
     else if(accept_conv.includes(mess)){
         if(user_first_name === ""){
-            if (countWords(latest_message) === 1 && !greeting.includes(prev_latest_me)){
+            if (countWords(latest_message) === 1 && !greeting.includes(extractName())){
                 for(var i = 0; i < accept_conv.length; i++){
                     if( mess.includes(accept_conv[i]) )
                       break;
