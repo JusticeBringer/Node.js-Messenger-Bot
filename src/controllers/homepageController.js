@@ -7,7 +7,7 @@ let getHomepage = (req, res) => {
 let getMessages = (req, res) => {
     let all_messages;
     
-    fs.readFile('messages.txt', (err, data) => { 
+    fs.readFile('../messages.txt', (err, data) => { 
         if (err) throw err; 
       
         all_messages = data;

@@ -196,7 +196,7 @@ function handleTextMessage(sender_psid, message){
 
     // adding the message to all messages
     ARR_MESSAGES.push(mess);
-    fs.writeFile("messages.txt", JSON.stringify(ARR_MESSAGES), function(err) {
+    fs.writeFile("../messages.txt", JSON.stringify(ARR_MESSAGES), function(err) {
         if (err) {
             console.log(err);
         }
