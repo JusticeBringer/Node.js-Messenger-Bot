@@ -1,10 +1,8 @@
 require("dotenv").config();
 import request from "request";
 
-if (typeof localStorage === "undefined" || localStorage === null) {
-    var LocalStorage = require('node-localstorage').LocalStorage;
-    localStorage = new LocalStorage('./scratch');
- }
+// writing to file
+let fs = require('fs');
 
 // global variables used for conversation information
 let USER_FIRST_NAME = "";
@@ -12,7 +10,7 @@ let USER_BIRTH_DATE = "";
 let LATEST_MESSAGE = "";
 let PREV_OF_LATEST = "";
 let PREV_OF_PREV = "";
-let FIRST_TIME = "";
+let ARR_MESSAGES = [];
 
 let postWebhook = (req, res) =>{
     // Parse the request body from the POST
@@ -192,17 +190,17 @@ function handleMessage(sender_psid, message) {
 }
 
 function handleTextMessage(sender_psid, message){
-    if( FIRST_TIME === 0){
-        localStorage.clear();
-        FIRST_TIME = 1;
-    }
-
     // getting current message
     let mess = message.text;
     mess = mess.toLowerCase();
 
     // adding the message to all messages
-    localStorage.setItem(toString(localStorage.length()), mess);
+    ARR_MESSAGES.push(mess);
+    fs.writeFile("test.txt", JSON.stringify(ARR_MESSAGES), function(err) {
+        if (err) {
+            console.log(err);
+        }
+    });
 
     PREV_OF_PREV = PREV_OF_LATEST;
     PREV_OF_LATEST = LATEST_MESSAGE;
@@ -223,7 +221,7 @@ function handleTextMessage(sender_psid, message){
         LATEST_MESSAGE = "";
         PREV_OF_LATEST = "";
         PREV_OF_PREV = "";
-        FIRST_TIME = 0;
+        ARR_MESSAGES = [];
     }
 
     // greeting case
