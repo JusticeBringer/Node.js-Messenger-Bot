@@ -284,7 +284,8 @@ function handleQuickReply(sender_psid, message){
             callSendAPI(sender_psid,`Birth date introduced is false. If you wish to start this conversation again write "#start_over". Goodbye 🖐`);
         }
         else{
-            let days_left = Math.round(Math.abs(today - new Date(today.getFullYear(), user_month - 1, user_day)));
+            const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+            let days_left = Math.round(Math.abs( ( (today - new Date(today.getFullYear(), user_month - 1, user_day)) / oneDay) ) );
 
             let resp = {
                 "attachment":{
@@ -294,22 +295,22 @@ function handleQuickReply(sender_psid, message){
                       "elements":[
                          {
                           "title":"Welcome!",
-                          "image_url":"https://petersfancybrownhats.com/company_image.png",
-                          "subtitle":"We have the right hat for everyone.",
+                          "image_url":"https://m.media-amazon.com/images/I/41WzHq0SkRL._AC_UY218_.jpg",
+                          "subtitle":"We have the right headphones for everyone.",
                           "default_action": {
                             "type": "web_url",
-                            "url": "https://petersfancybrownhats.com/view?item=103",
+                            "url": "https://www.amazon.com/Cancelling-Headphones-Bluetooth-Microphone-Comfortable/dp/B019U00D7K/ref=sr_1_1?dchild=1&keywords=headphones&qid=1599034241&s=specialty-aps&sr=1-1",
                             "webview_height_ratio": "tall",
                           },
                           "buttons":[
                             {
                               "type":"web_url",
-                              "url":"https://petersfancybrownhats.com",
+                              "url":"https://www.amazon.com",
                               "title":"View Website"
                             },{
                               "type":"postback",
                               "title":"Start Chatting",
-                              "payload":""
+                              "payload":"start chatting"
                             }              
                           ]      
                         }
