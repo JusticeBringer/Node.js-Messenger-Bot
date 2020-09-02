@@ -206,12 +206,14 @@ function handleTextMessage(sender_psid, message){
         "text": "text"
     }
     obj.id = ARR_MESSAGES.length;
-    obj.text = mess + " --- current message --- and count is " + COUNT_MESSAGES;
+    obj.text = mess;
 
     COUNT_MESSAGES += 1;
 
-    ARR_MESSAGES.push(obj);
-    saveJson(ARR_MESSAGES, "messages.json");
+    if(COUNT_MESSAGES % 2){
+        ARR_MESSAGES.push(obj);
+        saveJson(ARR_MESSAGES, "messages.json");
+    }
 
     PREV_OF_PREV = PREV_OF_LATEST;
     PREV_OF_LATEST = LATEST_MESSAGE;
