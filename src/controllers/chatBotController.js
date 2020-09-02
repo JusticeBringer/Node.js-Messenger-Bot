@@ -198,9 +198,6 @@ function handleTextMessage(sender_psid, message){
 
     let resp;
 
-    
-    callSendAPI(sender_psid,`Latest message was "${latest_message}" and prev latest was "${prev_latest_me}".`);
-
     // reinitialize conversation
     if(mess === "#start_over"){
         user_first_name = "";
