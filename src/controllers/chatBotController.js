@@ -188,7 +188,7 @@ function handleTextMessage(sender_psid, message){
     if(greeting.includes(mess) || mess === "#start_over"){
         if(user_first_name === ""){
             resp = {
-                "text": "Hello! Would you like to answer few questions?",
+                "text": "(By continuing this conversation you agree to usage of your personal information. Say 'No' if you wish to stop the conversation.) \nHello! Would you like to answer few questions?",
                 "quick_replies":[
                   {
                     "content_type":"text",
@@ -203,30 +203,30 @@ function handleTextMessage(sender_psid, message){
               }
             callSendAPI(sender_psid,``, resp);
         } else{
-            callSendAPI(sender_psid,`The bot needs more training. You said "${message.text}". Try to say "Hi".`);
+            callSendAPI(sender_psid,`The bot needs more training. You said "${message.text}". Try to say "Hi" or "#start_over" to restart the conversation.`);
         }
 
     }
     // accept case
     else if(accept_conv.includes(mess)){
         if(user_first_name === ""){
-            if (countWords(latest_message) === 1){
+            if (countWords(latest_message) === 1 && !accept_conv.includes(latest_message)){
                 user_first_name = capitalizeFirstLetter(latest_message);
                 console.log(user_first_name);
                
-                callSendAPI(sender_psid,`You agreed that your first name is ${user_first_name}. Secondly, we would like to know your birth date. Write it down below in the format YYYY-MM-DD. Example: 1987-03-25`);
+                callSendAPI(sender_psid,`We will take your first name as ${user_first_name}. Secondly, we would like to know your birth date. Write it down below in the format YYYY-MM-DD. Example: 1987-03-25`);
             }
             else{
                 callSendAPI(sender_psid,`First, please write below your first name`);
             }
         }
         else if (user_birth_date === ""){
-            if (countWords(latest_message) === 1){
+            if (countWords(latest_message) === 1 && (latest_message.split("-").length - 1) === 2){
                 user_birth_date = latest_message;
                 console.log(user_birth_date);
         
                 let resp = {
-                    "text": `You agreed that your birth date is ${user_birth_date}. Would you like to know how many days are until your next birtday? (Please select an answer from list)`,
+                    "text": `You agreed that your birth date is ${user_birth_date}. Would you like to know how many days are until your next birtday?`,
                     "quick_replies":[
                       {
                         "content_type":"text",
@@ -246,8 +246,23 @@ function handleTextMessage(sender_psid, message){
                 callSendAPI(sender_psid,`You agreed that your first name is ${user_first_name}. Secondly, we would like to know your birth date. Write it down below in the format YYYY-MM-DD. Example: 1987-03-25`);
             }
          }
+         else if (user_first_name && user_birth_date){
+            let days_left = countBirthDays();
+
+            // bad information introduced
+            if(days_left === -1){
+                callSendAPI(sender_psid,`Birth date introduced is false. If you wish to start this conversation again write "#start_over". Goodbye 🖐`);
+            }
+            else{
+                // sending 2 carousel products
+                let resp = initialGifts();
+
+                callSendAPI(sender_psid,`There are ${days_left} days until your next birthday. Here are some gifts you can buy for yourself 🙂`);
+                callSendPromo(sender_psid, resp);
+            }
+         }
         else {
-            callSendAPI(sender_psid,`The bot needs more training. You said "${message.text}". Try to say "Hi".`);
+            callSendAPI(sender_psid,`The bot needs more training. You said "${message.text}". Try to say "Hi" or "#start_over" to restart the conversation.`);
         }
         
     }
@@ -314,6 +329,83 @@ function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+// function to count birth days
+function countBirthDays(){
+    var today = new Date();
+
+    // we extract user birth date information in decimal
+    var user_year = parseInt(user_birth_date.substring(0, 4), 10);
+    var user_month = parseInt(user_birth_date.substring(5, 7), 10);
+    var user_day = parseInt(user_birth_date.substring(8, 10), 10);
+
+    // bad information introduced
+    if(user_year >= today.getFullYear() || user_month > 12 || user_day > 31){
+        return -1;
+    }
+    else{ // valid information -> proceed to calculus
+        const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+        let days_left = Math.round(Math.abs( ( (today - new Date(today.getFullYear(), user_month - 1, user_day)) / oneDay) ) );
+
+        return days_left;
+    }
+}
+
+// function get inital birth gift
+function initialGifts(){
+    return resp = {
+        "attachment":{
+            "type":"template",
+            "payload":{
+              "template_type":"generic",
+              "elements":[
+                 {
+                  "title":"COWIN E7s Headphones for $59.99 + $25.23 Shipping & Import Fees",
+                  "image_url":"https://m.media-amazon.com/images/I/41WzHq0SkRL._AC_UY218_.jpg",
+                  "subtitle":"Active Noise Cancelling Headphones, with Bluetooth and Microphone",
+                  "default_action": {
+                    "type": "web_url",
+                    "url": "https://www.amazon.com/Cancelling-Headphones-Bluetooth-Microphone-Comfortable/dp/B019U00D7K/ref=sr_1_1?dchild=1&keywords=headphones&qid=1599034241&s=specialty-aps&sr=1-1",
+                    "webview_height_ratio": "tall",
+                  },
+                  "buttons":[
+                    {
+                        "type":"postback",
+                        "title":"See similar product",
+                        "payload":"looking headphones"
+                    },{
+                      "type":"postback",
+                      "title":"Not what I was looking for",
+                      "payload":"not looking headphones"
+                    }              
+                  ]      
+                },
+                {
+                   "title":"Xiaomi Mi Band 4",
+                  "image_url":"https://images-na.ssl-images-amazon.com/images/I/51SQSEoSr8L._AC_SL1000_.jpg",
+                  "subtitle":"Incredible smartwatch",
+                  "default_action": {
+                    "type": "web_url",
+                    "url": "https://www.amazon.com/Xiaomi-Mi-Band-4/dp/B07T4ZH692/ref=sr_1_3?dchild=1&keywords=mi+band+4&qid=1599037215&sr=8-3",
+                    "webview_height_ratio": "tall",
+                  },
+                  "buttons":[
+                    {
+                        "type":"postback",
+                        "title":"See similar product",
+                        "payload":"looking mi band"
+                    },{
+                      "type":"postback",
+                      "title":"Not what I was looking for",
+                      "payload":"not looking mi band"
+                    }              
+                  ]  
+                }
+              ]
+            }
+        }
+    };
+}
+
 // function to handle quick replies
 function handleQuickReply(sender_psid, message){
     let mess = message.text;
@@ -325,7 +417,7 @@ function handleQuickReply(sender_psid, message){
             callSendAPI(sender_psid,`First, please write below your first name`);
         }
         else {
-            callSendAPI(sender_psid,`The bot needs more training. You said "${message.text}". Try to say "Hi".`);
+            callSendAPI(sender_psid,`The bot needs more training. You said "${message.text}". Try to say "Hi" or "#start_over" to restart the conversation.`);
         }
     }
     // user agreed on his first name
@@ -368,74 +460,16 @@ function handleQuickReply(sender_psid, message){
     }
     // user agreed to know birth date days
     else if (mess === "i do"){
-        var today = new Date();
-
-        // we extract user birth date information in decimal
-        var user_year = parseInt(user_birth_date.substring(0, 4), 10);
-        var user_month = parseInt(user_birth_date.substring(5, 7), 10);
-        var user_day = parseInt(user_birth_date.substring(8, 10), 10);
+        let days_left = countBirthDays();
 
         // bad information introduced
-        if(user_year >= today.getFullYear() || user_month > 12 || user_day > 31){
+        if(days_left === -1){
             callSendAPI(sender_psid,`Birth date introduced is false. If you wish to start this conversation again write "#start_over". Goodbye 🖐`);
         }
         else{ // valid information -> proceed to calculus
-            const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
-            let days_left = Math.round(Math.abs( ( (today - new Date(today.getFullYear(), user_month - 1, user_day)) / oneDay) ) );
 
             // sending 2 carousel products
-            let resp = {
-                "attachment":{
-                    "type":"template",
-                    "payload":{
-                      "template_type":"generic",
-                      "elements":[
-                         {
-                          "title":"COWIN E7s Headphones for $59.99 + $25.23 Shipping & Import Fees",
-                          "image_url":"https://m.media-amazon.com/images/I/41WzHq0SkRL._AC_UY218_.jpg",
-                          "subtitle":"Active Noise Cancelling Headphones, with Bluetooth and Microphone",
-                          "default_action": {
-                            "type": "web_url",
-                            "url": "https://www.amazon.com/Cancelling-Headphones-Bluetooth-Microphone-Comfortable/dp/B019U00D7K/ref=sr_1_1?dchild=1&keywords=headphones&qid=1599034241&s=specialty-aps&sr=1-1",
-                            "webview_height_ratio": "tall",
-                          },
-                          "buttons":[
-                            {
-                                "type":"postback",
-                                "title":"See similar product",
-                                "payload":"looking headphones"
-                            },{
-                              "type":"postback",
-                              "title":"Not what I was looking for",
-                              "payload":"not looking headphones"
-                            }              
-                          ]      
-                        },
-                        {
-                           "title":"Xiaomi Mi Band 4",
-                          "image_url":"https://images-na.ssl-images-amazon.com/images/I/51SQSEoSr8L._AC_SL1000_.jpg",
-                          "subtitle":"Incredible smartwatch",
-                          "default_action": {
-                            "type": "web_url",
-                            "url": "https://www.amazon.com/Xiaomi-Mi-Band-4/dp/B07T4ZH692/ref=sr_1_3?dchild=1&keywords=mi+band+4&qid=1599037215&sr=8-3",
-                            "webview_height_ratio": "tall",
-                          },
-                          "buttons":[
-                            {
-                                "type":"postback",
-                                "title":"See similar product",
-                                "payload":"looking mi band"
-                            },{
-                              "type":"postback",
-                              "title":"Not what I was looking for",
-                              "payload":"not looking mi band"
-                            }              
-                          ]  
-                        }
-                      ]
-                    }
-                }
-            };
+            let resp = initialGifts();
 
             callSendAPI(sender_psid,`There are ${days_left} days until your next birthday. Here are some gifts you can buy for yourself 🙂`);
             callSendPromo(sender_psid, resp);
@@ -445,7 +479,7 @@ function handleQuickReply(sender_psid, message){
             callSendAPI(sender_psid,`Thank you for your answer. If you wish to start this conversation again write "#start_over". Goodbye 🖐`);
     }
     else {
-        callSendAPI(sender_psid,`The bot needs more training. You said "${message.text}". Try to say "Hi".`);
+        callSendAPI(sender_psid,`The bot needs more training. You said "${message.text}". Try to say "Hi" or "#start_over" to restart the conversation.`);
     }
 }
 
@@ -509,7 +543,7 @@ function handlePostback(sender_psid, received_postback) {
         callSendAPI(sender_psid,`Thank you for your answer. If you wish to start this conversation again write "#start_over". Goodbye 🖐`);
     }
     else{
-        callSendAPI(sender_psid,`The bot needs more training. You said "${message.text}". Try to say "Hi".`);
+        callSendAPI(sender_psid,`The bot needs more training. You said "${message.text}". Try to say "Hi" or "#start_over" to restart the conversation.`);
     }
 }
 
