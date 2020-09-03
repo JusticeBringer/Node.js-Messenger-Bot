@@ -2,8 +2,12 @@ require("dotenv").config();
 import request from "request";
 import mongoose from "mongoose";
 
-// writing to file
-import { writeFileSync } from 'fs';
+// connect to DB
+mongoose.connect(
+    process.env.DB_CONNECTION, 
+    { useNewUrlParser: true} , 
+    () => console.log("Connected to DB")
+ );
 
 const MessageSchema = mongoose.Schema({
     id: {
@@ -37,7 +41,6 @@ function addMessageToAPI(obj, res){
         ARR_MESSAGES.push(obj);
 
         obj.save()
-            .exec()
             .then(data => {
                 res.json(data);
             })
