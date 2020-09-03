@@ -19,7 +19,7 @@ function saveJson(obJson, numeFis){
     writeFileSync(numeFis, data);
 }
 
-// function to add a message into the array and call save to json
+// function to add a message into the array and call save to json 
 function addMessageToAPI(obj){
     if ((COUNT_MESSAGES % 2) != 0){
         ARR_MESSAGES.push(obj);
