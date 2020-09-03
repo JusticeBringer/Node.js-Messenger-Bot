@@ -48,7 +48,7 @@ let postMessage = (req, res) => {
         // Get database name
         var db = client.db('MessengerBot')
         
-        db.collection("messages").insertOne(obj, function(err, res) {
+        db.collection("messages").insertOne(JSON.stringify(obj), function(err, res) {
             if (err) {
                 throw err;
             }
