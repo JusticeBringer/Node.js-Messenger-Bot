@@ -18,7 +18,6 @@ let postMessage = (req, res) => {
     //     return;
 
     let MongoClient = require('mongodb').MongoClient;
-    let connectionUrl = encodeURI(process.env.DB_CONNECTION);
 
     // creating the message object
     let obj = new Message({
@@ -27,7 +26,7 @@ let postMessage = (req, res) => {
 
     console.log("OBJ: " + obj);
 
-    MongoClient.connect(connectionUrl, {useNewUrlParser: true}, function(err, client) {
+    MongoClient.connect(process.env.DB_CONNECTION, {useNewUrlParser: true, useUnifiedTopology: true}, function(err, client) {
         if (err) throw err;
         
         console.log("Connected correctly to server");
