@@ -72,8 +72,9 @@ let postWebhook = (req, res) => {
             let sender_psid = webhook_event.sender.id;
             console.log('Sender PSID: ' + sender_psid);
 
-            // adding the message to all messages
-            let obj = new MessageSchema({
+            // creating the message object
+            let obj_mess = mongoose.model("obj_mess", MessageSchema);
+            let obj = new obj_mess({
                 id: ARR_MESSAGES.length
             });
 
