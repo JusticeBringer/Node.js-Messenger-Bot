@@ -1,5 +1,3 @@
-import { readFileSync } from 'fs';
-
 let getHomepage = (req, res) => {
     return res.render("ejs/homepage.ejs");
 };

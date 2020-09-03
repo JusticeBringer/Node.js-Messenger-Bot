@@ -3,12 +3,15 @@ import request from "request";
 import mongoose from "mongoose";
 
 // connect to DB
-mongoose.connect(
+mongoose
+.connect(
     process.env.DB_CONNECTION, 
-    { useNewUrlParser: true} , 
-    () => console.log("Connected to DB")
- );
-
+    {   dbName: 'MessengerBot', 
+        useNewUrlParser: true, 
+        useUnifiedTopology: true 
+    })
+.then(() => console.log("Connected to db"))
+.catch(err => console.log(`Could not Connected to db ${process.env.DB_CONNECTION} `, err));
 
 const MessageSchema = mongoose.Schema({
     id: {
