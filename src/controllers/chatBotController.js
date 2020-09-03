@@ -2,33 +2,7 @@ require("dotenv").config();
 import request from "request";
 import mongoose from "mongoose";
 
-// connect to DB
-mongoose
-.connect(
-    process.env.DB_CONNECTION, 
-    {   dbName: 'MessengerBot', 
-        useNewUrlParser: true, 
-        useUnifiedTopology: true 
-    })
-.then(() => console.log("Connected to db"))
-.catch(err => console.log(`Could not Connected to db ${process.env.DB_CONNECTION} `, err));
-
-const MessageSchema = mongoose.Schema({
-    id: {
-        type: Number,
-        required: true,
-        unique: true,
-        validate: {
-            validator : Number.isInteger,
-            message : '{Value} is not integer value'
-        }
-    },
-    text: {
-        type: String,
-        required: true
-    }
-});
-
+const Message = require("../models/Message");
 
 // global variables used for conversation information
 let USER_FIRST_NAME = "";
@@ -54,6 +28,36 @@ function addMessageToAPI(obj, res){
     }
 }
 
+let postMessage = (req, res) => {
+    let MongoClient = require('mongodb').MongoClient;
+    let connectionUrl = 'mongodb://localhost:27017/';
+
+    // Parse the request body from the POST
+    let body = req.body;
+
+    console.log(body);
+
+    MongoClient.connect(connectionUrl, function(err, client) {
+        if (err) throw err;
+        
+        console.log("Connected correctly to server");
+
+        // Get some collection
+        var db = client.db('BotMess')
+      
+        var myobj = { id: 1, text: "Highway 37" };
+        dbo.collection("messages").insertOne(myobj, function(err, res) {
+          if (err) throw err;
+          console.log("1 document inserted");
+          db.close();
+        });
+
+      });
+
+    // Return a '200 OK' response to all events
+    res.status(200).send('EVENT_RECEIVED');
+}
+
 let postWebhook = (req, res) => {
     // Parse the request body from the POST
     let body = req.body;
@@ -73,10 +77,12 @@ let postWebhook = (req, res) => {
             console.log('Sender PSID: ' + sender_psid);
 
             // creating the message object
-            let obj_mess = mongoose.model("obj_mess", MessageSchema);
-            let obj = new obj_mess({
-                id: ARR_MESSAGES.length
-            });
+            // let obj_mess = mongoose.model("obj_mess", MessageSchema);
+            // let obj = new obj_mess({
+            //     id: ARR_MESSAGES.length
+            // });
+
+            let obj = {};
 
             // Check if the event is a message or postback and
             // pass the event to the appropriate handler function
@@ -650,9 +656,8 @@ function handlePostback(sender_psid, received_postback) {
     }
 }
 
-module.exports = mongoose.model('Messages', MessageSchema);
-
 module.exports = {
   postWebhook: postWebhook,
   getWebhook: getWebhook,
+  postMessage: postMessage
 };
