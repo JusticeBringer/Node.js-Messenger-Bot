@@ -18,7 +18,7 @@ let initWebRoutes = async (app) => {
     router.post("/", chatBotController.postMessage);
     router.post("/webhook", chatBotController.postWebhook);
 
-    return await app.use("/", router);
+    return app.use("/", router);
 };
 
 module.exports = initWebRoutes;
