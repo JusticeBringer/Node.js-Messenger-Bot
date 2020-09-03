@@ -3,6 +3,11 @@ import { MongoClient } from 'mongodb';
 // variable to cache messages
 let MESS_S;
 
+// messages are cached for 1 minute
+setInterval(() => {
+	getAllMess();
+}, 1000 * 60);
+
 // function to get all messages
 function getAllMess(){
 	
