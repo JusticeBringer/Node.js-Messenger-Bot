@@ -18,11 +18,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 initWebRoute(app);
 
 // connect to DB
-mongoose.connect(
-   process.env.DB_CONNECTION, 
-   { useNewUrlParser: true} , 
-   () => console.log("Connected to DB") 
-);
+// mongoose.connect(
+//    process.env.DB_CONNECTION, 
+//    { useNewUrlParser: true} , 
+//    () => console.log("Connected to DB") 
+// );
 
 let port = process.env.PORT || 8080;
 
