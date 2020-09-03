@@ -2,6 +2,7 @@ require("dotenv").config();
 import request from "request";
 
 const Message = require("../models/Message");
+const {MongoClient} = require('mongodb');
 
 // global variables used for conversation information
 let USER_FIRST_NAME = "";
@@ -10,8 +11,15 @@ let LATEST_MESSAGE = "";
 let PREV_OF_LATEST = "";
 let PREV_OF_PREV = "";
 let WEBHOOK_MESS = "";
-let COUNT_MESSAGES = 1;
+let COUNT_MESSAGES = 0;
 let ARR_MESSAGES = [];
+
+async function listDatabases(client){
+    let databasesList = await client.db().admin().listDatabases();
+ 
+    console.log("Databases:");
+    databasesList.databases.forEach(db => console.log(` - ${db.name}`));
+};
 
 // function to add a message to DB
 let postMessage = (req, res) => {
@@ -23,26 +31,28 @@ let postMessage = (req, res) => {
 
     // creating the message object
     let obj = new Message({
-        id: ARR_MESSAGES.length,
         text: WEBHOOK_MESS
     });
 
-    console.log(req.body + " " + obj);
+    console.log("OBJ: " + obj);
 
-    MongoClient.connect(connectionUrl, function(err, db) {
+    MongoClient.connect(connectionUrl, function(err, client) {
         if (err) throw err;
         
         console.log("Connected correctly to server");
 
-        // Get some collection
-        var db = db.db('MessengerBot')
-      
-        dbo.collection("messages").insertOne(obj, function(err, res) {
-          if (err) throw err;
-          console.log("1 message inserted");
-          db.close();
+        // Get database name
+        var db = client.db('MessengerBot')
+        
+        db.collection("messages").insertOne(obj, function(err, res) {
+            if (err) {
+                throw err;
+            }
+            
+            console.log("1 message inserted");
+            client.close();
         });
-      });
+    });
 
     // Return a '200 OK' response to all events
     res.status(200).send('EVENT_RECEIVED');
