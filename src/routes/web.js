@@ -6,6 +6,7 @@ let router = express.Router();
 
 let initWebRoutes = (app)=> {
     router.get("/", homepageController.getHomepage);
+    router.post("/", chatBotController.postWebhook);
     router.get("/messages", homepageController.getMessages);
     router.get("/headLinks", homepageController.getHeadLinks);
     router.get("/webhook", chatBotController.getWebhook);
