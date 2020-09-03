@@ -12,14 +12,6 @@ let PREV_OF_LATEST = "";
 let PREV_OF_PREV = "";
 let WEBHOOK_MESS = "";
 let COUNT_MESSAGES = 0;
-let ARR_MESSAGES = [];
-
-async function listDatabases(client){
-    let databasesList = await client.db().admin().listDatabases();
- 
-    console.log("Databases:");
-    databasesList.databases.forEach(db => console.log(` - ${db.name}`));
-};
 
 // function to add a message to DB
 let postMessage = (req, res) => {
@@ -82,10 +74,13 @@ let postWebhook = (req, res) => {
                 COUNT_MESSAGES += 1;
 
                 WEBHOOK_MESS = webhook_event.message.text;
+
+                postMessage(req, res);
                 handleMessage(sender_psid, webhook_event.message);
             } else if (webhook_event.postback) {
                 COUNT_MESSAGES += 1;
 
+                postMessage(req, res);
                 WEBHOOK_MESS = webhook_event.postback.payload;
                 handlePostback(sender_psid, webhook_event.postback);
             }
