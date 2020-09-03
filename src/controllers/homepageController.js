@@ -9,6 +9,11 @@ let getMessages = (req, res) => {
     return res.render("ejs/messages.ejs", {messages: all_messages});
 };
 
+let getMessageId = (req, res) => {
+    let all_messages = readFileSync("messages.json");
+    return res.send(all_messages);
+}
+
 let getHeadLinks = (req, res) => {
     return res.render("partials/headLinks.ejs");
 };

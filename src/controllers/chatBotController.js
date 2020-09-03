@@ -1,8 +1,26 @@
 require("dotenv").config();
 import request from "request";
+import mongoose from "mongoose";
 
 // writing to file
 import { writeFileSync } from 'fs';
+
+const MessageSchema = mongoose.Schema({
+    id: {
+        type: Number,
+        required: true,
+        unique: true,
+        validate: {
+            validator : Number.isInteger,
+            message : '{Value} is not integer value'
+        }
+    },
+    text: {
+        type: String,
+        required: true
+    }
+});
+
 
 // global variables used for conversation information
 let USER_FIRST_NAME = "";
@@ -13,17 +31,19 @@ let PREV_OF_PREV = "";
 let COUNT_MESSAGES = 0;
 let ARR_MESSAGES = [];
 
-// function to save a message in a json file
-function saveJson(obJson, numeFis){
-    let data = JSON.stringify(obJson);
-    writeFileSync(numeFis, data);
-}
-
 // function to add a message into the array and call save to json 
-function addMessageToAPI(obj){
+function addMessageToAPI(obj, res){
     if ((COUNT_MESSAGES % 2) != 0){
         ARR_MESSAGES.push(obj);
-        saveJson(ARR_MESSAGES, "messages.json");
+
+        obj.save()
+            .exec()
+            .then(data => {
+                res.json(data);
+            })
+            .catch(err => {
+                res.json({message: err});
+            });
     }
 }
 
@@ -46,11 +66,9 @@ let postWebhook = (req, res) =>{
             console.log('Sender PSID: ' + sender_psid);
 
             // adding the message to all messages
-            let obj = {
-                "id" : 0,
-                "text": "text"
-            }
-            obj.id = ARR_MESSAGES.length;
+            let obj = new MessageSchema({
+                id: ARR_MESSAGES.length
+            });
 
             // Check if the event is a message or postback and
             // pass the event to the appropriate handler function
@@ -58,13 +76,13 @@ let postWebhook = (req, res) =>{
                 COUNT_MESSAGES += 1;
 
                 obj.text = webhook_event.message.text;
-                addMessageToAPI(obj);
+                addMessageToAPI(obj, res);
                 handleMessage(sender_psid, webhook_event.message);
             } else if (webhook_event.postback) {
                 COUNT_MESSAGES += 1;
 
                 obj.text = webhook_event.postback.payload;
-                addMessageToAPI(obj);
+                addMessageToAPI(obj, res);
                 handlePostback(sender_psid, webhook_event.postback);
             }
 
@@ -624,7 +642,9 @@ function handlePostback(sender_psid, received_postback) {
     }
 }
 
+module.exports = mongoose.model('Messages', MessageSchema);
+
 module.exports = {
   postWebhook: postWebhook,
-  getWebhook: getWebhook
+  getWebhook: getWebhook,
 };
