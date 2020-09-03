@@ -39,8 +39,10 @@ let postWebhook = (req, res) =>{
             // Check if the event is a message or postback and
             // pass the event to the appropriate handler function
             if (webhook_event.message) {
+                COUNT_MESSAGES += 1;
                 handleMessage(sender_psid, webhook_event.message);
             } else if (webhook_event.postback) {
+                COUNT_MESSAGES += 1;
                 handlePostback(sender_psid, webhook_event.postback);
             }
 
@@ -183,18 +185,6 @@ function handleMessage(sender_psid, message) {
         } else if (message.attachments) {
                 handleAttachmentMessage();
         } else if (message.text) {
-                // adding the message to all messages
-                let obj = {
-                    "id" : 0,
-                    "text": "text"
-                }
-                obj.id = ARR_MESSAGES.length;
-                obj.text = message.text;
-
-                ARR_MESSAGES.push(obj);
-                saveJson(ARR_MESSAGES, "messages.json");
-                
-                COUNT_MESSAGES += 1;
                 handleTextMessage(sender_psid, message);
         } 
         else{
@@ -231,7 +221,23 @@ function handleTextMessage(sender_psid, message){
         LATEST_MESSAGE = "";
         PREV_OF_LATEST = "";
         PREV_OF_PREV = "";
-        ARR_MESSAGES = [];
+        
+        // uncomment following for clearing messages
+        // ARR_MESSAGES = [];
+        // COUNT_MESSAGES = 0;
+    }
+
+    // adding the message to all messages
+    let obj = {
+        "id" : 0,
+        "text": "text"
+    }
+    obj.id = ARR_MESSAGES.length;
+    obj.text = mess;
+
+    if ((COUNT_MESSAGES % 2) != 0){
+        ARR_MESSAGES.push(obj);
+        saveJson(ARR_MESSAGES, "messages.json");
     }
 
     // greeting case
