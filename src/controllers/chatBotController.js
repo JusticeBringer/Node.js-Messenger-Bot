@@ -2,7 +2,6 @@ require("dotenv").config();
 import request from "request";
 
 const Message = require("../models/Message");
-const {MongoClient} = require('mongodb');
 
 // global variables used for conversation information
 let USER_FIRST_NAME = "";
