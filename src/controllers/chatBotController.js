@@ -9,7 +9,7 @@ mongoose.connect(
     () => console.log("Connected to DB")
  );
 
- 
+
 const MessageSchema = mongoose.Schema({
     id: {
         type: Number,
@@ -51,7 +51,7 @@ function addMessageToAPI(obj, res){
     }
 }
 
-let postWebhook = (req, res) =>{
+let postWebhook = (req, res) => {
     // Parse the request body from the POST
     let body = req.body;
 
