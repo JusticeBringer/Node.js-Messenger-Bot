@@ -43,10 +43,10 @@ function addMessageToAPI(obj, res){
 
         obj.save()
             .then(data => {
-                res.json(data);
+                res.send("message saved");
             })
             .catch(err => {
-                res.json({message: err});
+                res.status(400).send(err);
             });
     }
 }
