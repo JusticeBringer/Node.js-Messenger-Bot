@@ -1,10 +1,16 @@
+const Message = require("../models/Message");
+
 let getHomepage = (req, res) => {
     return res.render("ejs/homepage.ejs");
 };
 
 let getMessages = (req, res) => {
-    let all_messages = {};
-    return res.render("ejs/messages.ejs", {messages: all_messages});
+    try{
+        const all_messages = await Message.find();
+        res.render("ejs/messages.ejs", {messages: all_messages})
+    } catch (err){
+        res.render(err);
+    }
 };
 
 let getMessageId = (req, res) => {

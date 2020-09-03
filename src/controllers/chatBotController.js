@@ -57,9 +57,6 @@ let postMessage = (req, res) => {
             client.close();
         });
     });
-
-    // Return a '200 OK' response to all events
-    res.status(200).send('EVENT_RECEIVED');
 }
 
 let postWebhook = (req, res) => {
