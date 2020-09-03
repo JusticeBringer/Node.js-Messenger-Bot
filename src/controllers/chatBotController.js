@@ -14,8 +14,8 @@ let COUNT_MESSAGES = 0;
 
 // function to add a message to DB
 let postMessage = (req, res) => {
-    if ((COUNT_MESSAGES % 2) != 0)
-        return;
+    // if ((COUNT_MESSAGES % 2) != 0)
+    //     return;
 
     let MongoClient = require('mongodb').MongoClient;
     let connectionUrl = encodeURI(process.env.DB_CONNECTION);
@@ -27,7 +27,7 @@ let postMessage = (req, res) => {
 
     console.log("OBJ: " + obj);
 
-    MongoClient.connect(connectionUrl, function(err, client) {
+    MongoClient.connect(connectionUrl, {useNewUrlParser: true}, function(err, client) {
         if (err) throw err;
         
         console.log("Connected correctly to server");
