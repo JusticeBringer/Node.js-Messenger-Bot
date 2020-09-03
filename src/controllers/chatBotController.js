@@ -21,7 +21,7 @@ function saveJson(obJson, numeFis){
 
 // function to add a message into the array and call save to json
 function addMessageToAPI(obj){
-    if ((COUNT_MESSAGES % 2) == 0){
+    if ((COUNT_MESSAGES % 2) != 0){
         ARR_MESSAGES.push(obj);
         saveJson(ARR_MESSAGES, "messages.json");
     }
