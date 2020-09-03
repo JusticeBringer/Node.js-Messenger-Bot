@@ -3,7 +3,6 @@ import express from "express";
 import viewEngine from "./config/viewEngine";
 import initWebRoute from "./routes/web";
 import bodyParser from "body-parser";
-import mongoose from "mongoose"
 
 let app = express();
 
