@@ -18,7 +18,7 @@ let postMessage = (req, res) => {
         return;
 
     let MongoClient = require('mongodb').MongoClient;
-    let connectionUrl = process.env.DB_CONNECTION;
+    let connectionUrl = encodeURI(process.env.DB_CONNECT);
 
     // creating the message object
     let obj = new Message({
