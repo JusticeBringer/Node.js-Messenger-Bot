@@ -1,6 +1,5 @@
 require("dotenv").config();
 import request from "request";
-import mongoose from "mongoose";
 
 const Message = require("../models/Message");
 
@@ -10,48 +9,39 @@ let USER_BIRTH_DATE = "";
 let LATEST_MESSAGE = "";
 let PREV_OF_LATEST = "";
 let PREV_OF_PREV = "";
-let COUNT_MESSAGES = 0;
+let WEBHOOK_MESS = "";
+let COUNT_MESSAGES = 1;
 let ARR_MESSAGES = [];
 
-// function to add a message into the array and call save to json 
-function addMessageToAPI(obj, res){
-    if ((COUNT_MESSAGES % 2) != 0){
-        ARR_MESSAGES.push(obj);
-
-        obj.save()
-            .then(data => {
-                res.send("message saved");
-            })
-            .catch(err => {
-                res.status(400).send(err);
-            });
-    }
-}
-
+// function to add a message to DB
 let postMessage = (req, res) => {
+    if ((COUNT_MESSAGES % 2) == 0)
+        return;
+
     let MongoClient = require('mongodb').MongoClient;
-    let connectionUrl = 'mongodb://localhost:27017/';
+    let connectionUrl = process.env.DB_CONNECTION;
 
-    // Parse the request body from the POST
-    let body = req.body;
+    // creating the message object
+    let obj = new Message({
+        id: ARR_MESSAGES.length,
+        text: WEBHOOK_MESS
+    });
 
-    console.log(body);
+    console.log(req.body + " " + obj);
 
-    MongoClient.connect(connectionUrl, function(err, client) {
+    MongoClient.connect(connectionUrl, function(err, db) {
         if (err) throw err;
         
         console.log("Connected correctly to server");
 
         // Get some collection
-        var db = client.db('BotMess')
+        var db = db.db('MessengerBot')
       
-        var myobj = { id: 1, text: "Highway 37" };
-        dbo.collection("messages").insertOne(myobj, function(err, res) {
+        dbo.collection("messages").insertOne(obj, function(err, res) {
           if (err) throw err;
-          console.log("1 document inserted");
+          console.log("1 message inserted");
           db.close();
         });
-
       });
 
     // Return a '200 OK' response to all events
@@ -76,27 +66,17 @@ let postWebhook = (req, res) => {
             let sender_psid = webhook_event.sender.id;
             console.log('Sender PSID: ' + sender_psid);
 
-            // creating the message object
-            // let obj_mess = mongoose.model("obj_mess", MessageSchema);
-            // let obj = new obj_mess({
-            //     id: ARR_MESSAGES.length
-            // });
-
-            let obj = {};
-
             // Check if the event is a message or postback and
             // pass the event to the appropriate handler function
             if (webhook_event.message) {
                 COUNT_MESSAGES += 1;
 
-                obj.text = webhook_event.message.text;
-                addMessageToAPI(obj, res);
+                WEBHOOK_MESS = webhook_event.message.text;
                 handleMessage(sender_psid, webhook_event.message);
             } else if (webhook_event.postback) {
                 COUNT_MESSAGES += 1;
 
-                obj.text = webhook_event.postback.payload;
-                addMessageToAPI(obj, res);
+                WEBHOOK_MESS = webhook_event.postback.payload;
                 handlePostback(sender_psid, webhook_event.postback);
             }
 
