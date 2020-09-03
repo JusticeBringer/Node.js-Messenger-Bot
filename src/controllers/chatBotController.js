@@ -26,7 +26,21 @@ let postMessage = (req, res) => {
 
     console.log("OBJ: " + obj);
 
-    MongoClient.connect(process.env.DB_CONNECTION, {useNewUrlParser: true, useUnifiedTopology: true}, function(err, client) {
+    console.log(encodeURI(process.env.DB_CONNECTION));
+    console.log(process.env.MONGO_DB_USER);
+
+    MongoClient.connect(
+        process.env.DB_CONNECTION, {
+            auth: {
+                user: process.env.MONGO_DB_USER,
+                password: process.env.MONGO_DB_PASSWORD
+            }
+        },
+        {
+            useNewUrlParser: true, 
+            useUnifiedTopology: true}, 
+            function(err, client) {
+
         if (err) throw err;
         
         console.log("Connected correctly to server");
