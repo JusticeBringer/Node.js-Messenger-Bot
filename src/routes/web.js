@@ -2,7 +2,8 @@ import express from "express";
 import homepageController from "../controllers/homepageController";
 import chatBotController from "../controllers/chatBotController";
 import messagesController from "../controllers/messagesController";
-import headLinksController from "../controllers/headLinksController"
+import headLinksController from "../controllers/headLinksController";
+import headerController from "../controllers/headerController";
 
 let router = express.Router();
 
@@ -12,6 +13,7 @@ let initWebRoutes = async (app) => {
     router.get("/messages/:messId", messagesController.getMessageId);
     router.delete("/messages/:messId", messagesController.deleteMessageById);
 
+    router.get("/header", headerController.getHeader);
     router.get("/headLinks", headLinksController.getHeadLinks);
     router.get("/webhook", chatBotController.getWebhook);
 
