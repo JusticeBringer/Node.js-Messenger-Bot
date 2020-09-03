@@ -1,9 +1,9 @@
-const Message = require("../models/Message");
-
+// render homepage
 let getHomepage = (req, res) => {
     return res.render("ejs/homepage.ejs");
 };
 
+// render messages
 let getMessages = async (req, res) => {
     let MongoClient = require('mongodb').MongoClient;
     let all_messages;
@@ -49,17 +49,7 @@ let getMessages = async (req, res) => {
     }, 3000);
 };
 
-let getMessageId = (req, res) => {
-    let all_messages = {};
-    return res.send(all_messages);
-}
-
-let getHeadLinks = (req, res) => {
-    return res.render("partials/headLinks.ejs");
-};
-
 module.exports = {
     getHomepage: getHomepage,
-    getMessages: getMessages,
-    getHeadLinks: getHeadLinks
+    getMessages: getMessages
 };
