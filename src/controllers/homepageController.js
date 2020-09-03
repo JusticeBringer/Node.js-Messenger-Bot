@@ -5,12 +5,12 @@ let getHomepage = (req, res) => {
 };
 
 let getMessages = (req, res) => {
-    let all_messages = readFileSync("messages.json");
+    let all_messages = {};
     return res.render("ejs/messages.ejs", {messages: all_messages});
 };
 
 let getMessageId = (req, res) => {
-    let all_messages = readFileSync("messages.json");
+    let all_messages = {};
     return res.send(all_messages);
 }
 
