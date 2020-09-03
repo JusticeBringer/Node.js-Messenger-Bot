@@ -13,9 +13,18 @@ let PREV_OF_PREV = "";
 let COUNT_MESSAGES = 0;
 let ARR_MESSAGES = [];
 
+// function to save a message in a json file
 function saveJson(obJson, numeFis){
     let data = JSON.stringify(obJson);
     writeFileSync(numeFis, data);
+}
+
+// function to add a message into the array and call save to json
+function addMessageToAPI(){
+    if ((COUNT_MESSAGES % 2) = 0){
+        ARR_MESSAGES.push(obj);
+        saveJson(ARR_MESSAGES, "messages.json");
+    }
 }
 
 let postWebhook = (req, res) =>{
@@ -40,9 +49,13 @@ let postWebhook = (req, res) =>{
             // pass the event to the appropriate handler function
             if (webhook_event.message) {
                 COUNT_MESSAGES += 1;
+
+                addMessageToAPI();
                 handleMessage(sender_psid, webhook_event.message);
             } else if (webhook_event.postback) {
                 COUNT_MESSAGES += 1;
+
+                addMessageToAPI();
                 handlePostback(sender_psid, webhook_event.postback);
             }
 
@@ -234,11 +247,6 @@ function handleTextMessage(sender_psid, message){
     }
     obj.id = ARR_MESSAGES.length;
     obj.text = mess;
-
-    if ((COUNT_MESSAGES % 2) != 0){
-        ARR_MESSAGES.push(obj);
-        saveJson(ARR_MESSAGES, "messages.json");
-    }
 
     // greeting case
     if(greeting.includes(mess) || mess === "#start_over"){
