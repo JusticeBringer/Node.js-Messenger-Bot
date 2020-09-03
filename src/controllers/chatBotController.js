@@ -14,8 +14,8 @@ let COUNT_MESSAGES = 0;
 
 // function to add a message to DB
 let postMessage = (req, res) => {
-    // if ((COUNT_MESSAGES % 2) != 0)
-    //     return;
+    if ((COUNT_MESSAGES % 2) != 0)
+        return;
 
     let MongoClient = require('mongodb').MongoClient;
 
