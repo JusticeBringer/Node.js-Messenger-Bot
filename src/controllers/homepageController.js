@@ -49,7 +49,12 @@ let getMessages = async (req, res) => {
     }, 3000);
 };
 
+let getHeadLinks = (req, res) => {
+    return res.render("partials/headLinks.ejs");
+};
+
 module.exports = {
     getHomepage: getHomepage,
-    getMessages: getMessages
+    getMessages: getMessages,
+    getHeadLinks: getHeadLinks
 };
