@@ -20,7 +20,7 @@ function saveJson(obJson, numeFis){
 }
 
 // function to add a message into the array and call save to json
-function addMessageToAPI(){
+function addMessageToAPI(obj){
     if ((COUNT_MESSAGES % 2) == 0){
         ARR_MESSAGES.push(obj);
         saveJson(ARR_MESSAGES, "messages.json");
@@ -45,17 +45,26 @@ let postWebhook = (req, res) =>{
             let sender_psid = webhook_event.sender.id;
             console.log('Sender PSID: ' + sender_psid);
 
+            // adding the message to all messages
+            let obj = {
+                "id" : 0,
+                "text": "text"
+            }
+            obj.id = ARR_MESSAGES.length;
+
             // Check if the event is a message or postback and
             // pass the event to the appropriate handler function
             if (webhook_event.message) {
                 COUNT_MESSAGES += 1;
 
-                addMessageToAPI();
+                obj.text = webhook_event.message.text;
+                addMessageToAPI(obj);
                 handleMessage(sender_psid, webhook_event.message);
             } else if (webhook_event.postback) {
                 COUNT_MESSAGES += 1;
 
-                addMessageToAPI();
+                obj.text = webhook_event.postback.payload;
+                addMessageToAPI(obj);
                 handlePostback(sender_psid, webhook_event.postback);
             }
 
@@ -239,14 +248,6 @@ function handleTextMessage(sender_psid, message){
         // ARR_MESSAGES = [];
         // COUNT_MESSAGES = 0;
     }
-
-    // adding the message to all messages
-    let obj = {
-        "id" : 0,
-        "text": "text"
-    }
-    obj.id = ARR_MESSAGES.length;
-    obj.text = mess;
 
     // greeting case
     if(greeting.includes(mess) || mess === "#start_over"){
