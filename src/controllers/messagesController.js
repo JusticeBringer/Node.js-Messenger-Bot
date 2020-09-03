@@ -48,9 +48,9 @@ let getMessages = (req, res) => {
 	else{
 		getAllMess();
 		
-		MESS_S = JSON.stringify(MESS_S);
 
 		setTimeout(() => {
+			MESS_S = JSON.stringify(MESS_S);
 			res.render("ejs/messages.ejs", {messages: MESS_S});
 		}, 3000);
 	}
