@@ -1,8 +1,6 @@
-const Message = require("../models/Message");
-const middleWare = require('middleWare');
-const MongoClient = require('mongodb').MongoClient;
+import { MongoClient } from 'mongodb';
 
-// variabie to cache messages
+// variable to cache messages
 let MESS_S;
 
 // function to get all messages
@@ -53,11 +51,7 @@ let getMessages = (req, res) => {
 		MESS_S = JSON.stringify(MESS_S);
 
 		setTimeout(() => {
-			console.log(MESS_S[0]);
-			console.log(MESS_S[0].text);
-			console.log(MESS_S[0]._id);
-
-			res.render("ejs/messages.ejs", {messages: JSON.stringify(MESS_S)});
+			res.render("ejs/messages.ejs", {messages: MESS_S});
 		}, 3000);
 	}
 };
@@ -145,13 +139,16 @@ let deleteMessageById = async (req, res) => {
 		
 				// Get database name
 				var db = client.db('MessengerBot')
-				var my_query = {_id: req.params.messId};
+				var my_query = { text: msg};
 
 				db.collection("messages").deleteOne(my_query, function(err, res) {
 					if (err) {
 						throw err;
 					}
 		
+					// recache messages
+					getAllMess();
+
 					client.close();
 					console.log("Deleted 1 message");
 
