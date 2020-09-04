@@ -58,8 +58,10 @@ Branch 1 is the same as branch 3.
 **Observation**: Async/await made infinite loading pages so I made a workaround using setTimeout instead. Needs further investigation.
 
 ### Branch 2 back-end demo
+[![Watch the video](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/videoOne.png)](https://www.youtube.com/watch?v=0Jv8TrkaiVA&feature=youtu.be)
 
 ### Branch 3 back-end demo
+[![Watch the video](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/videoTwo.png)](https://www.youtube.com/watch?v=07d_gAP6bd0&feature=youtu.be)
 
 ### Technologies used
 
