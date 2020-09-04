@@ -12,7 +12,13 @@ viewEngine(app);
 
 // use body-parser to post data
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors({
+   'allowedHeaders': ['sessionId', 'Content-Type'],
+   'exposedHeaders': ['sessionId'],
+   'origin': '*',
+   'methods': 'GET,HEAD,PUT,PATCH,POST,DELETE',
+   'preflightContinue': false
+ }));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // init all web routes
