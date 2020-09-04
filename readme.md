@@ -67,7 +67,14 @@ Branch 1 is the same as branch 3.
 
 - HTML, CSS, Javascript, Node.js
 
+### How to use this project
+
+1. Clone this project
+2. Rename .env.example file to .env file and fill the required variables
+3. Run ```npm start``` for starting project
+
+For step 2 I would recommend watching [this](https://www.youtube.com/watch?v=Gv-FWOTY4TM&t=2511s)
+
 ### Inspiration and help
 
 1. https://github.com/haryphamdev/facebook-messenger-chat-bot-nodejs
-2. https://www.youtube.com/watch?v=Gv-FWOTY4TM&t=2511s
