@@ -17,6 +17,39 @@
 
 <h1> Messenger bot </h1>
 
+<p> Welcome to the Bot Messenger app! Bot is very friendly and wants to know you better! Start the conversation by typing a greeting message 🖐</p>
+
+<h2>Rules for conversation: </h2>
+<ul>
+  <li> Greeting: "hi", "hey", "hello"</li>
+  <li> Accepting: "yup", "yes", "yeah", "sure", "yep", "i do"</li>
+  <li> Denying: "no", "nah", "nope", "not now", "maybe later"</li>
+  <li> Gratitude: "thanks", "thx", "thank you", "thank you very much", "thanks a lot", "thanks!", "thank you!" </li>
+</ul>
+
+<h2> Maintaining the conversation </h2>
+<p> Bot is still very early on his learning phase, so you should try to answer correctly to the questions and choosing answers from given cards, although you can manually type messages. </p>
+
+<button onclick="showHide()"> Show demo conversation </button>
+
+<div id="animation" style="display: none;">
+  <img src="" alt="demo conversation"  width=250/>
+</div>
+
+<script>
+function showHide(){
+    let bt = document.getElementById("animation");
+
+    if (bt.style.display === 'block'){
+        bt.style.display = 'none';
+    }
+    else{
+        bt.style.display = 'block';
+    }
+}
+
+</script>
+
 <!-- Load Facebook SDK for JavaScript -->
 <div id="fb-root"></div>
 <script>
