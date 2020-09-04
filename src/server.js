@@ -3,6 +3,7 @@ import express from "express";
 import viewEngine from "./config/viewEngine";
 import initWebRoute from "./routes/web";
 import bodyParser from "body-parser";
+import cors from "cors"
 
 let app = express();
 
@@ -11,6 +12,7 @@ viewEngine(app);
 
 // use body-parser to post data
 app.use(bodyParser.json());
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // init all web routes
