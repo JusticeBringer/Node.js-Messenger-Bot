@@ -13,6 +13,17 @@ let WEBHOOK_MESS = "";
 let SENDER_ID = "";
 let COUNT_MESSAGES = 0;
 
+// function to check whether user is in DB
+// and, if successful, return position in DB
+function checkInDB(arrMess){
+    for(let i = 0; i < arrMess.length; i++){
+        if(arrMess[i].senderId === SENDER_ID){
+            return i;
+        }
+    }
+    return -1;
+}
+
 // function to add a message to DB
 let postMessage = (req, res) => {
     if ((COUNT_MESSAGES % 2) == 0)
@@ -49,45 +60,45 @@ let postMessage = (req, res) => {
             // Get database name
             let db = client.db(process.env.DB_NAME);
 
-            // variable for searching for the senderId in the database
-            let toSearch = new Message({
-                senderId: SENDER_ID
-            });
-
             // we search if user already in database
             db.collection(process.env.DB_COLLECTION).find({}).toArray(function(err, result) {
                 if (err){
                     throw err;
                 }
 
-                console.log(result);
+                console.log("Display data: " + result);
 
-                // // if user is not
-                // if (!result){
-                //     db.collection(process.env.DB_COLLECTION).insertOne(obj, function(error, res) {
-                //         if (error) {
-                //             throw error;
-                //         }
+                // check whether user is in DB
+                let posInDB = checkInDB(result);
+
+                // if user is not
+                if (posInDB < 0){
+                    db.collection(process.env.DB_COLLECTION).insertOne(obj, function(error, res) {
+                        if (error) {
+                            throw error;
+                        }
                         
-                //         console.log("1 message inserted for not in DB userId=" + SENDER_ID);
-                //         client.close();
-                //     });
-                // }
-                // // user is
-                // else{
-                //     console.log("Res in else: " + result);
-                //     let newText = result.text;
-                //     newText.push(obj.text);
+                        console.log("1 message inserted for not in DB userId=" + SENDER_ID);
+                        client.close();
+                    });
+                }
+                // user is
+                else{
+                    let usrArrMess = result[posInDB].text;
+                    console.log("User messages: " + usrArrMess);
 
-                //     db.collection(process.env.DB_COLLECTION).updateOne(result.text, newText, function(error, res) {
-                //         if (error) {
-                //             throw error;
-                //         }
+                    let newText = usrArrMess.slice();
+                    newText.push(obj.text);
 
-                //         console.log("1 message inserted for in DB userId=" + SENDER_ID);
-                //         client.close();
-                //     });
-                // }
+                    db.collection(process.env.DB_COLLECTION).updateOne(usrArrMess, newText, function(error, res) {
+                        if (error) {
+                            throw error;
+                        }
+
+                        console.log("1 message inserted for in DB userId=" + SENDER_ID);
+                        client.close();
+                    });
+                }
             });
         }
     );
