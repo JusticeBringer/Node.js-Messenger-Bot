@@ -87,8 +87,10 @@ let postMessage = (req, res) => {
                     let usrArrMess = result[posInDB].text;
                     console.log("User messages: " + usrArrMess);
 
-                    let newText = usrArrMess.slice();
-                    newText.push(obj.text);
+                    let newText = [];
+                    for (let i = 0; i < usrArrMess.length; i++)
+                        newText.push(usrArrMess[i]);
+                    newText.push(WEBHOOK_MESS);
 
                     db.collection(process.env.DB_COLLECTION).update(
                         {_id : result[posInDB]._id},
