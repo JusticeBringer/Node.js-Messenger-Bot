@@ -43,6 +43,16 @@ Here is a complete conversation with good input from user.
 
 ![Demo conversation](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/docPictures/demo.gif)
 
+### Storage of messages
+
+All the messages received from users are stored in a MongoDB Atlas database. Each website visitor has an unique id when he starts a Messenger conversation, making the storage of messages structured in an easy way.
+
+A view on the MongoDB database:
+![ScreenshotMongo7](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/docPictures/mongo7.png)
+
+A view on the "/messages" page:
+![ScreenshotMongo8](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/docPictures/mongo8.png)
+
 ### Technical details
 
 This repository has 3 branches:
@@ -90,32 +100,32 @@ Filling these 5 variables depends upon the steps below.
 Firstly, you have to sign up for an account [here](https://account.mongodb.com/account/register?n=%2Fv2%2F5f4fed9616fc651a9ef5d934&nextHash=%23clusters). Then, from the left panel select the option "Clusters", click the button "Create a New Cluster", which should be near the top right corner, and fill the required details.
 After completing, the "Clusters" panel should look like this:
 
-![Screenshot1](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/docPictures/mongo1.PNG)
+![ScreenshotMongo1](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/docPictures/mongo1.PNG)
 
 After that, we need to create a collection inside a database. In the panel of newly created cluster it's a button named "Collections". Click on it. We then click on the button "+ Create Database" and fill the required details. In my case, "DATABASE NAME" is "MessengerBot" (same name as the cluster) and "COLLECTION NAME" is "messages". After that, it will look like this:
 
-![Screenshot2](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/docPictures/mongo6.png)
+![ScreenshotMongo6](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/docPictures/mongo6.png)
 
 The given database name is the "DB_NAME" variable from the .env file and given collection name is the "DB_COLLECTION" variable.
 
 In order to connect to the database, you need to set up a user who has database access. From the left panel select "Database Access", then click the button "+ ADD NEW DATABASE USER" near the top right corner. I would suggest going with "Password" for "Authentication Method" and "Read and write to any database" for the "Database User Privileges". The username and password set for "Password Authentication" are the .env variables "MONGO_DB_USER" and "MONGO_DB_PASSWORD".
 
-![Screenshot3](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/docPictures/mongo4.PNG)
+![ScreenshotMongo4](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/docPictures/mongo4.PNG)
 
 Secondly, you have to connect your cluster to your application. Click the "Connect" button, which is inside your cluster panel, and click "Connect your application", like so:
 
-![Screenshot4](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/docPictures/mongo2.PNG)
+![ScreenshotMongo2](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/docPictures/mongo2.PNG)
 
 After that, you should see the connection string which is under "Add your connection string into your application code". You have to replace <password> with the password set for the database user and <dbname> with the name of the database that connections will use by default. In my case, "dbname" is "MessengerBot". 
 The connection string that you have right now is the DB_CONNECTION from the .env file. Until here you have filled the 3 required variables, but there is one more thing to do.
 
-![Screenshot5](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/docPictures/mongo3.PNG)
+![ScreenshotMongo3](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/docPictures/mongo3.PNG)
 
 Final step: from the left panel select "Network Access". Then click the button "+ ADD IP ADDRESS" near the top right corner. Depending on the security you want you can choose to manually add all the IP addresses you will be connecting with to the DB or you can choose to connect from everywhere, regarding the used IP address.
 
 Depending on the option you selected, the "Network Access" panel should look like this:
 
-![Screenshot6](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/docPictures/mongo5.PNG)
+![ScreenshotMongo5](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/docPictures/mongo5.PNG)
 
 ### Inspiration and help
 
