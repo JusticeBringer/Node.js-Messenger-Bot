@@ -71,17 +71,18 @@ let postMessage = (req, res) => {
                 }
                 // user is
                 else{
-                    let newText = result.text;
-                    newText.push(obj.text);
+                    console.log(result);
+                    // let newText = result.text;
+                    // newText.push(obj.text);
 
-                    db.collection(process.env.DB_COLLECTION).updateOne(result.text, newText, function(error, res) {
-                        if (error) {
-                            throw error;
-                        }
+                    // db.collection(process.env.DB_COLLECTION).updateOne(result.text, newText, function(error, res) {
+                    //     if (error) {
+                    //         throw error;
+                    //     }
 
-                        console.log("1 message inserted for in DB userId=" + SENDER_ID);
-                        client.close();
-                    });
+                    //     console.log("1 message inserted for in DB userId=" + SENDER_ID);
+                    //     client.close();
+                    // });
                 }
             });
         }
