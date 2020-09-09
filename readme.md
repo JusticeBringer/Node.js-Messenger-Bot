@@ -87,26 +87,27 @@ Filling these 3 variables depends upon the steps below.
 
 Firstly, you have to sign up for an account [here](https://account.mongodb.com/account/register?n=%2Fv2%2F5f4fed9616fc651a9ef5d934&nextHash=%23clusters). Then, from the left panel select the option "Clusters", click the button "Create a New Cluster", which should be near the top right corner, and fill the required details.
 After completing, the "Clusters" panel should look like this:
-[https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/docPictures/mongo1.png]
+
+![Screenshot1](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/docPictures/mongo1.png)
 
 In order to connect to the database, you need to set up a user who has database access. From the left panel select "Database Access", then click the button "+ ADD NEW DATABASE USER" near the top right corner. I would suggest going with "Password" for "Authentication Method" and "Read and write to any database" for the "Database User Privileges". The username and password set for "Password Authentication" are the .env variables "MONGO_DB_USER" and "MONGO_DB_PASSWORD".
 
-[https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/docPictures/mongo4.png]
+![Screenshot2](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/docPictures/mongo4.png)
 
 Secondly, you have to connect your cluster to your application. Click the "Connect" button, which is inside your cluster panel, and click "Connect your application", like so:
 
-[https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/docPictures/mongo2.png]
+![Screenshot3](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/docPictures/mongo2.png)
 
 After that, you should see the connection string which is under "Add your connection string into your application code". You have to replace <password> with the password set for the database user and <dbname> with the name of the database that connections will use by default. In my case, "dbname" is "MessengerBot". 
 The connection string that you have right now is the DB_CONNECTION from the .env file. Until here you have filled the 3 required variables, but there is one more thing to do.
 
-[https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/docPictures/mongo3.png]
+![Screenshot4](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/docPictures/mongo3.png)
 
 Final step: from the left panel select "Network Access". Then click the button "+ ADD IP ADDRESS" near the top right corner. Depending on the security you want you can choose to manually add all the IP addresses you will be connecting with to the DB or you can choose to connect from everywhere, regarding the used IP address.
 
 Depending on the option you selected, the "Network Access" panel should look like this:
 
-[https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/docPictures/mongo5.png]
+![Screenshot5](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/docPictures/mongo5.png)
 
 ### Inspiration and help
 
