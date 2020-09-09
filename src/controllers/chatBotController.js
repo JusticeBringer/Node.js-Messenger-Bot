@@ -55,7 +55,7 @@ let postMessage = (req, res) => {
             });
 
             // we search if user already in database
-            db.collection(process.env.DB_COLLECTION).findOne(toSearch, function(err, res) {
+            db.collection(process.env.DB_COLLECTION).findOne(toSearch, function(err, result) {
                 // if user is not
                 if (err) {
                     db.collection(process.env.DB_COLLECTION).insertOne(obj, function(error, res) {
