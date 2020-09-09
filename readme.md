@@ -43,16 +43,6 @@ Here is a complete conversation with good input from user.
 
 ![Demo conversation](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/docPictures/demo.gif)
 
-### Storage of messages
-
-All the messages received from users are stored in a MongoDB Atlas database. Each website visitor has an unique id when he starts a Messenger conversation, making the storage of messages structured in an easy way.
-
-A view on the MongoDB database:
-![ScreenshotMongo7](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/docPictures/mongo7.png)
-
-A view on the "/messages" page:
-![ScreenshotMongo8](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/docPictures/mongo8.png)
-
 ### Technical details
 
 This repository has 3 branches:
@@ -73,9 +63,15 @@ Branch 1 is the same as branch 3.
 ### Branch 3 back-end demo
 [![Watch the video](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/docPictures/videoTwo.png)](https://www.youtube.com/watch?v=07d_gAP6bd0&feature=youtu.be)
 
-### Technologies used
+### Storage of messages
 
-- HTML, CSS, Javascript, Node.js
+All the messages received from users are stored in a MongoDB Atlas database. Each website visitor has an unique id when he starts a Messenger conversation, making the storage of messages structured in an easy way.
+
+A view on the MongoDB database:
+![ScreenshotMongo7](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/docPictures/mongo7.png)
+
+A view on the "/messages" page:
+![ScreenshotMongo8](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/docPictures/mongo8.png)
 
 ### How to use this project
 
@@ -126,6 +122,10 @@ Final step: from the left panel select "Network Access". Then click the button "
 Depending on the option you selected, the "Network Access" panel should look like this:
 
 ![ScreenshotMongo5](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/docPictures/mongo5.PNG)
+
+### Technologies used
+
+- HTML, CSS, Javascript, Node.js
 
 ### Inspiration and help
 
