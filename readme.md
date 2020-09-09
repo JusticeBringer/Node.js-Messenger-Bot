@@ -94,7 +94,7 @@ After completing, the "Clusters" panel should look like this:
 
 After that, we need to create a collection inside a database. In the panel of newly created cluster it's a button named "Collections". Click on it. We then click on the button "+ Create Database" and fill the required details. In my case, "DATABASE NAME" is "MessengerBot" (same name as the cluster) and "COLLECTION NAME" is "messages". After that, it will look like this:
 
-![Screenshot2](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/docPictures/mongo6.PNG)
+![Screenshot2](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/docPictures/mongo6.png)
 
 The given database name is the "DB_NAME" variable from the .env file and given collection name is the "DB_COLLECTION" variable.
 

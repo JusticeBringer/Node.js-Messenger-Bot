@@ -10,6 +10,7 @@ let LATEST_MESSAGE = "";
 let PREV_OF_LATEST = "";
 let PREV_OF_PREV = "";
 let WEBHOOK_MESS = "";
+let SENDER_ID = "";
 let COUNT_MESSAGES = 0;
 
 // function to add a message to DB
@@ -21,13 +22,11 @@ let postMessage = (req, res) => {
 
     // creating the message object
     let obj = new Message({
-        text: WEBHOOK_MESS
+        senderId: SENDER_ID,
+        text: [WEBHOOK_MESS]
     });
 
     console.log("OBJ: " + obj);
-
-    console.log(encodeURI(process.env.DB_CONNECTION));
-    console.log(process.env.MONGO_DB_USER);
 
     MongoClient.connect(
         process.env.DB_CONNECTION, {
@@ -38,25 +37,55 @@ let postMessage = (req, res) => {
         },
         {
             useNewUrlParser: true, 
-            useUnifiedTopology: true}, 
-            function(err, client) {
-
-        if (err) throw err;
-        
-        console.log("Connected correctly to server");
-
-        // Get database name
-        var db = client.db(process.env.DB_NAME);
-        
-        db.collection(process.env.DB_COLLECTION).insertOne(obj, function(err, res) {
-            if (err) {
+            useUnifiedTopology: true
+        }, 
+        function(err, client) {
+            if (err){
                 throw err;
-            }
+            } 
             
-            console.log("1 message inserted");
-            client.close();
-        });
-    });
+            console.log("Connected to the server for inserting message");
+
+            // Get database name
+            let db = client.db(process.env.DB_NAME);
+
+            // variable for searching for the senderId in the database
+            let toSearch = new Message({
+                senderId: SENDER_ID
+            });
+
+            // we search if user already in database
+            db.collection(process.env.DB_COLLECTION).findOne(toSearch, function(err, res) {
+                // if user is not
+                if (err) {
+                    db.collection(process.env.DB_COLLECTION).insertOne(obj, function(error, res) {
+                        if (error) {
+                            throw error;
+                        }
+                        
+                        console.log("1 message inserted for not in DB userId=" + SENDER_ID);
+                        client.close();
+                    });
+
+                    console.log(err);
+                }
+                // user is
+                else{
+                    let newText = result.text;
+                    newText.push(obj.text);
+
+                    db.collection(process.env.DB_COLLECTION).updateOne(result.text, newText, function(error, res) {
+                        if (error) {
+                            throw error;
+                        }
+
+                        console.log("1 message inserted for in DB userId=" + SENDER_ID);
+                        client.close();
+                    });
+                }
+            });
+        }
+    );
 }
 
 let postWebhook = (req, res) => {
@@ -75,6 +104,7 @@ let postWebhook = (req, res) => {
 
             // Get the sender PSID
             let sender_psid = webhook_event.sender.id;
+            SENDER_ID = webhook_event.sender.id;
             console.log('Sender PSID: ' + sender_psid);
 
             // Check if the event is a message or postback and
