@@ -56,8 +56,12 @@ let postMessage = (req, res) => {
 
             // we search if user already in database
             db.collection(process.env.DB_COLLECTION).findOne(toSearch, function(err, result) {
+                if (err){
+                    throw err;
+                }
+
                 // if user is not
-                if (err) {
+                if (!result){
                     db.collection(process.env.DB_COLLECTION).insertOne(obj, function(error, res) {
                         if (error) {
                             throw error;
@@ -66,23 +70,21 @@ let postMessage = (req, res) => {
                         console.log("1 message inserted for not in DB userId=" + SENDER_ID);
                         client.close();
                     });
-
-                    console.log(err);
                 }
                 // user is
                 else{
-                    console.log(result);
-                    // let newText = result.text;
-                    // newText.push(obj.text);
+                    console.log("Res in else: " + result);
+                    let newText = result.text;
+                    newText.push(obj.text);
 
-                    // db.collection(process.env.DB_COLLECTION).updateOne(result.text, newText, function(error, res) {
-                    //     if (error) {
-                    //         throw error;
-                    //     }
+                    db.collection(process.env.DB_COLLECTION).updateOne(result.text, newText, function(error, res) {
+                        if (error) {
+                            throw error;
+                        }
 
-                    //     console.log("1 message inserted for in DB userId=" + SENDER_ID);
-                    //     client.close();
-                    // });
+                        console.log("1 message inserted for in DB userId=" + SENDER_ID);
+                        client.close();
+                    });
                 }
             });
         }
