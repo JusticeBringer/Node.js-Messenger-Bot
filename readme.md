@@ -123,6 +123,13 @@ Depending on the option you selected, the "Network Access" panel should look lik
 
 ![ScreenshotMongo5](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/docPictures/mongo5.PNG)
 
+
+### Testing the code
+
+1. Testing the connection with the MongoDB, inserting a message was done [here](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/src/controllers/messagesController.test.js)
+2. Testing the helper functions for the conversation with the Messenger Bot, such as extraction of user first name, birth date and other, was done [here](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/src/controllers/chatBotController.test.js)
+3. Testing the rendering of "header" and "head links" was done [here](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/src/controllers/headerController.test.js) and [here](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/src/controllers/headLinksController.test.js)
+
 ### Technologies used
 
 - HTML, CSS, Javascript, Node.js
