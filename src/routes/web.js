@@ -1,9 +1,9 @@
-import express from "express";
-import homepageController from "../controllers/homepageController";
-import chatBotController from "../controllers/chatBotController";
-import messagesController from "../controllers/messagesController";
-import headLinksController from "../controllers/headLinksController";
-import headerController from "../controllers/headerController";
+const express             = require("express");
+const homepageController  = require("../controllers/homepageController");
+const chatBotController   = require("../controllers/chatBotController");
+const messagesController  = require("../controllers/messagesController");
+const headLinksController = require("../controllers/headLinksController");
+const headerController    = require("../controllers/headerController");
 
 let router = express.Router();
 
