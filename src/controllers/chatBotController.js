@@ -709,9 +709,9 @@ module.exports = {
   postMessage: postMessage
 };
 
-module.exports = checkInDB;
-module.exports = capitalizeFirstLetter;
-module.exports = countWords;
-module.exports = countBirthDays;
-module.exports = extractDate;
-module.exports = extractName;
+// module.exports = checkInDB;
+// module.exports = capitalizeFirstLetter;
+// module.exports = countWords;
+// module.exports = countBirthDays;
+// module.exports = extractDate;
+// module.exports = extractName;

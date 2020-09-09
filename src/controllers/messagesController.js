@@ -185,4 +185,4 @@ module.exports = {
 	deleteMessageById: deleteMessageById
 };
 
-module.exports = getMessageWithGivenId;
+// module.exports = getMessageWithGivenId;

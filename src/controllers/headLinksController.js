@@ -3,4 +3,6 @@ let getHeadLinks = (req, res) => {
     return res.render("partials/headLinks.ejs");
 };
 
-module.exports = getHeadLinks;
+module.exports = {
+    getHeadLinks: getHeadLinks
+};
