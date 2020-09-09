@@ -1,6 +1,5 @@
 require("dotenv").config();
-import request from "request";
-
+const request = require("request");
 const Message = require("../models/Message");
 
 // global variables used for conversation information
@@ -15,9 +14,9 @@ let COUNT_MESSAGES = 0;
 
 // function to check whether user is in DB
 // and, if successful, return position in DB
-function checkInDB(arrMess){
+function checkInDB(arrMess, givenId=SENDER_ID){
     for(let i = 0; i < arrMess.length; i++){
-        if(arrMess[i].senderId === SENDER_ID){
+        if(arrMess[i].senderId === givenId){
             return i;
         }
     }
@@ -91,6 +90,9 @@ let postMessage = (req, res) => {
                     for (let i = 0; i < usrArrMess.length; i++)
                         newText.push(usrArrMess[i]);
                     newText.push(WEBHOOK_MESS);
+
+                    // or with spread operator
+                    // newText = [...usrArrMess];
 
                     db.collection(process.env.DB_COLLECTION).update(
                         {_id : result[posInDB]._id},
@@ -251,23 +253,23 @@ function countWords(str) {
 
 // function used to extract user first name 
 // from previous latest message
-function extractName(){
+function extractName(givenName=PREV_OF_LATEST){
     let name = "";
-    for(let i = 3; i < PREV_OF_LATEST.length; i++){
-        if (PREV_OF_LATEST[i] === ' ') break;
+    for(let i = 3; i < givenName.length; i++){
+        if (givenName[i] === ' ') break;
 
-        name += PREV_OF_LATEST[i];
+        name += givenName[i];
     }
     return name;
 }
 
 // function to extract date given by user
-function extractDate(){
+function extractDate(givenDate=PREV_OF_LATEST){
     let dt = "";
-    for(let i = 3; i < PREV_OF_LATEST.length; i++){
-        if (PREV_OF_LATEST[i] === ' ') break;
+    for(let i = 3; i < givenDate.length; i++){
+        if (givenDate[i] === ' ') break;
 
-        dt += PREV_OF_LATEST[i];
+        dt += givenDate[i];
     }
     return dt;
 }
@@ -293,7 +295,7 @@ function handleMessage(sender_psid, message) {
 }
 
 function handleAttachmentMessage(sender_psid, message){
-    callSendAPI(sender_psid,`From hadnle attachment message. You said ${message.text}`);
+    callSendAPI(sender_psid,`From handle attachment message. You said ${message.text}`);
 }
 
 function handleTextMessage(sender_psid, message){
@@ -482,13 +484,13 @@ function capitalizeFirstLetter(string) {
 }
 
 // function to count birth days
-function countBirthDays(){
+function countBirthDays(birthDate=USER_BIRTH_DATE){
     var today = new Date();
 
     // we extract user birth date information in decimal
-    var user_year = parseInt(USER_BIRTH_DATE.substring(0, 4), 10);
-    var user_month = parseInt(USER_BIRTH_DATE.substring(5, 7), 10);
-    var user_day = parseInt(USER_BIRTH_DATE.substring(8, 10), 10);
+    var user_year = parseInt(birthDate.substring(0, 4), 10);
+    var user_month = parseInt(birthDate.substring(5, 7), 10);
+    var user_day = parseInt(birthDate.substring(8, 10), 10);
 
     // bad information introduced
     if(user_year >= today.getFullYear() || user_month > 12 || user_day > 31){
@@ -706,3 +708,9 @@ module.exports = {
   getWebhook: getWebhook,
   postMessage: postMessage
 };
+
+module.exports = checkInDB;
+module.exports = capitalizeFirstLetter;
+module.exports = countWords;
+module.exports = countBirthDays;
+module.exports = extractDate;
