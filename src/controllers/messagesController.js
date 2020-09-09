@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb';
+const MongoClient = require('mongodb');
 
 // variable to cache messages
 let MESS_S;
@@ -62,8 +62,8 @@ let getMessages = (req, res) => {
 };
 
 // function to get a message with given id
-function getMessageWithGivenId(mess_given_id){
-	for(let x of MESS_S){
+function getMessageWithGivenId(mess_given_id, arr_mess=MESS_S){
+	for(let x of arr_mess){
 		let first = JSON.stringify(x._id);
 		let second = JSON.stringify(mess_given_id);
 
@@ -184,3 +184,5 @@ module.exports = {
 	getMessageId: getMessageId,
 	deleteMessageById: deleteMessageById
 };
+
+module.exports = getMessageWithGivenId;

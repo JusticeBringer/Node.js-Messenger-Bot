@@ -714,3 +714,4 @@ module.exports = capitalizeFirstLetter;
 module.exports = countWords;
 module.exports = countBirthDays;
 module.exports = extractDate;
+module.exports = extractName;
