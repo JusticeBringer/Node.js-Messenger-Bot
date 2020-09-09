@@ -71,7 +71,7 @@ let postMessage = (req, res) => {
                 // check whether user is in DB
                 let posInDB = checkInDB(result);
 
-                // if user is not
+                // if user is not in DB
                 if (posInDB < 0){
                     db.collection(process.env.DB_COLLECTION).insertOne(obj, function(error, res) {
                         if (error) {
@@ -82,7 +82,7 @@ let postMessage = (req, res) => {
                         client.close();
                     });
                 }
-                // user is
+                // user is in DB
                 else{
                     let usrArrMess = result[posInDB].text;
                     console.log("User messages: " + usrArrMess);
