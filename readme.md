@@ -68,10 +68,10 @@ Branch 1 is the same as branch 3.
 All the messages received from users are stored in a MongoDB Atlas database. Each website visitor has an unique id when he starts a Messenger conversation, making the storage of messages structured in an easy way.
 
 A view on the MongoDB database:
-![ScreenshotMongo7](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/docPictures/mongo7.png)
+![ScreenshotMongo7](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/docPictures/mongo7.PNG)
 
 A view on the "/messages" page:
-![ScreenshotMongo8](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/docPictures/mongo8.png)
+![ScreenshotMongo8](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/docPictures/mongo8.PNG)
 
 ### How to use this project
 
@@ -100,7 +100,7 @@ After completing, the "Clusters" panel should look like this:
 
 After that, we need to create a collection inside a database. In the panel of newly created cluster it's a button named "Collections". Click on it. We then click on the button "+ Create Database" and fill the required details. In my case, "DATABASE NAME" is "MessengerBot" (same name as the cluster) and "COLLECTION NAME" is "messages". After that, it will look like this:
 
-![ScreenshotMongo6](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/docPictures/mongo6.png)
+![ScreenshotMongo6](https://github.com/JusticeBringer/Node.js-Messenger-Bot/blob/master/docPictures/mongo6.PNG)
 
 The given database name is the "DB_NAME" variable from the .env file and given collection name is the "DB_COLLECTION" variable.
 
