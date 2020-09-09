@@ -92,7 +92,7 @@ let postMessage = (req, res) => {
 
                     db.collection(process.env.DB_COLLECTION).update(
                         {_id : result[posInDB]._id},
-                        {$set : {usrArrMess : newText}}
+                        {$set : {text : newText}}
                     )
 
                     console.log("1 message inserted for in DB userId=" + SENDER_ID);
@@ -276,7 +276,7 @@ function handleMessage(sender_psid, message) {
         if (message.quick_reply) {
             handleQuickReply(sender_psid, message);
         } else if (message.attachments) {
-                handleAttachmentMessage();
+                handleAttachmentMessage(sender_psid, message);
         } else if (message.text) {
                 handleTextMessage(sender_psid, message);
         } 
@@ -288,6 +288,10 @@ function handleMessage(sender_psid, message) {
         console.error(error);
         callSendAPI(sender_psid,`An error has occured: '${error}'. We have been notified and will fix the issue shortly!`);
       }
+}
+
+function handleAttachmentMessage(sender_psid, message){
+    callSendAPI(sender_psid,`From hadnle attachment message. You said ${message.text}`);
 }
 
 function handleTextMessage(sender_psid, message){
