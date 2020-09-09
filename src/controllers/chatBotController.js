@@ -90,14 +90,13 @@ let postMessage = (req, res) => {
                     let newText = usrArrMess.slice();
                     newText.push(obj.text);
 
-                    db.collection(process.env.DB_COLLECTION).updateOne(usrArrMess, newText, function(error, res) {
-                        if (error) {
-                            throw error;
-                        }
+                    db.collection(process.env.DB_COLLECTION).update(
+                        {_id : result[posInDB]._id},
+                        {$set : {usrArrMess : newText}}
+                    )
 
-                        console.log("1 message inserted for in DB userId=" + SENDER_ID);
-                        client.close();
-                    });
+                    console.log("1 message inserted for in DB userId=" + SENDER_ID);
+                    client.close();
                 }
             });
         }
