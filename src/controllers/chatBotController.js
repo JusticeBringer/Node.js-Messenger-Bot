@@ -46,9 +46,9 @@ let postMessage = (req, res) => {
         console.log("Connected correctly to server");
 
         // Get database name
-        var db = client.db('MessengerBot')
+        var db = client.db(process.env.DB_NAME);
         
-        db.collection("messages").insertOne(obj, function(err, res) {
+        db.collection(process.env.DB_COLLECTION).insertOne(obj, function(err, res) {
             if (err) {
                 throw err;
             }

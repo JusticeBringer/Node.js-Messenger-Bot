@@ -28,9 +28,9 @@ function getAllMess(){
         console.log("Connected correctly to server for getting messages");
 
         // Get database name
-        var db = client.db('MessengerBot')
+        var db = client.db(process.env.DB_NAME);
         
-        db.collection("messages").find({}).toArray(function(err, res) {
+        db.collection(process.env.DB_COLLECTION).find({}).toArray(function(err, res) {
             if (err) {
                 throw err;
             }
@@ -143,10 +143,10 @@ let deleteMessageById = async (req, res) => {
 				console.log("Connected correctly to server for deleting the message");
 		
 				// Get database name
-				var db = client.db('MessengerBot')
+				var db = client.db(process.env.DB_NAME);
 				var my_query = { text: msg};
 
-				db.collection("messages").deleteOne(my_query, function(err, res) {
+				db.collection(process.env.DB_COLLECTION).deleteOne(my_query, function(err, res) {
 					if (err) {
 						throw err;
 					}
