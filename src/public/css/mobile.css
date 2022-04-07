@@ -1,0 +1,12 @@
+@media (max-width: 800px) {
+  h2 {
+    font-size: 15px;
+  }
+  .big-name {
+    font-size: 25px;
+  }
+  .barLooks {
+    padding-bottom: 10px;
+    padding-top: 10px;
+  }
+}
